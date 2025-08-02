@@ -1,6 +1,6 @@
 {
   "name": "rustnor",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A modern, lightweight, and fast Node.js web framework for building high-performance APIs and web applications.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/YOUR_USERNAME/rustnor.git"
+    "url": "git+https://github.com/ShohanMir/rustnor.git"
   },
   "keywords": [
     "web",
