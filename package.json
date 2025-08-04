@@ -2,18 +2,21 @@
   "name": "rustnor",
   "version": "1.0.1",
   "description": "A modern, lightweight, and fast Node.js web framework for building high-performance APIs and web applications.",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/core/index.js",
+  "types": "dist/core/index.d.ts",
   "files": [
-    "dist",
+    "dist/core",
+    "dist/http",
+    "dist/utils",
+    "dist/router",
     "LICENSE",
     "README.md"
   ],
   "scripts": {
-    "test": "mocha --require ts-node/register test/**/*.ts",
+    "test": "ts-node test/test.ts",
     "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "ts-node src/index.ts",
+    "start": "node dist/core/index.js",
+    "dev": "ts-node packages/core/index.ts",
     "prepublishOnly": "npm run build"
   },
   "repository": {
@@ -36,5 +39,8 @@
     "mocha": "^11.7.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "ts-mocha": "^11.1.0"
   }
 }

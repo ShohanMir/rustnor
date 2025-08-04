@@ -1,20 +1,19 @@
-import { Application, RouteHandler } from '../src/index';
+import { App } from "../packages/core";
+import { Router } from "../packages/router";
 
-const app = new Application();
+const app = new App();
+const router = new Router();
 
-const homeHandler: RouteHandler = (req, res) => {
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
-  res.end('Welcome to the home page!');
-};
+router.get("/", async (ctx) => {
+  ctx.body = "Welcome to the home page!";
+});
 
-const userHandler: RouteHandler = (req, res) => {
-  res.writeHead(200, { 'Content-Type': 'application/json' });
-  res.end(JSON.stringify({ id: 1, name: 'John Doe' }));
-};
+router.get("/user", async (ctx) => {
+  ctx.body = { id: 1, name: "John Doe" };
+});
 
-app.get('/', homeHandler);
-app.get('/user', userHandler);
+app.use(router.getRoutes());
 
 app.listen(3000, () => {
-  console.log('Server listening on port 3000');
+  console.log("Server listening on port 3000");
 });
