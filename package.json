@@ -1,6 +1,6 @@
 {
   "name": "rustnor",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A modern, lightweight, and fast Node.js web framework for building high-performance APIs and web applications.",
   "main": "dist/core/index.js",
   "types": "dist/core/index.d.ts",
