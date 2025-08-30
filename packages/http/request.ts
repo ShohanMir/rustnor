@@ -2,11 +2,11 @@ import { IncomingMessage } from "http";
 import { parse } from "url";
 import { ParsedUrlQuery } from "querystring";
 
-export class Request {
+export class Request<BodyT = any> {
   req: IncomingMessage;
   public readonly pathname: string;
   public readonly query: ParsedUrlQuery;
-  body: any;
+  body: BodyT;
   [key: string]: any;
 
   constructor(req: IncomingMessage) {
@@ -14,5 +14,6 @@ export class Request {
     const { pathname, query } = parse(req.url || "", true);
     this.pathname = pathname || "/";
     this.query = query;
+    this.body = {} as BodyT;
   }
 }

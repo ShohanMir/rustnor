@@ -1,6 +1,6 @@
 {
   "name": "rustnor",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "A modern, lightweight, and fast Node.js web framework for building high-performance APIs and web applications.",
   "main": "dist/core/index.js",
   "types": "dist/core/index.d.ts",
@@ -37,6 +37,18 @@
   ],
   "author": "",
   "license": "MIT",
+  "exports": {
+    ".": {
+      "import": "./dist/core/index.js",
+      "require": "./dist/core/index.js",
+      "types": "./dist/core/index.d.ts"
+    },
+    "./router": {
+      "import": "./dist/router/index.js",
+      "require": "./dist/router/index.js",
+      "types": "./dist/router/index.d.ts"
+    }
+  },
   "devDependencies": {
     "@types/chai": "^5.2.2",
     "@types/mocha": "^10.0.10",

@@ -1,7 +1,5 @@
-import { App } from "../packages/core";
+import { App, json, Context } from "../packages/core";
 import { Router } from "../packages/router";
-import { json } from "../packages/core/json";
-import { Context } from "../packages/core/context";
 
 const app = new App();
 const router = new Router();
@@ -14,6 +12,26 @@ app.onError((err: any, ctx: Context) => {
 
 // Add the JSON body parser middleware
 app.use(json());
+
+// --- How to use the new Generic Types ---
+// You can define the shape of your request body and state for full type-safety.
+/*
+interface CreateUserBody {
+  name: string;
+  email: string;
+}
+
+router.post("/user", async (ctx: Context<{}, CreateUserBody>) => {
+  // ctx.request.body is now fully typed!
+  const user = ctx.request.body;
+  console.log(user.name, user.email);
+
+  ctx.response.status(201).json({
+    message: "User created successfully",
+    received_user: user,
+  });
+});
+*/
 
 router.get("/", async (ctx) => {
   ctx.response.status(200).send(
@@ -31,6 +49,7 @@ router.get("/user/:id", async (ctx) => {
   });
 });
 
+// This route uses the default `any` type for the body for simplicity.
 router.post("/user", async (ctx) => {
   const user = ctx.request.body;
 

@@ -3,19 +3,19 @@ import { Request } from "../http/request";
 import { Response } from "../http/response";
 import { ParsedUrlQuery } from "querystring";
 
-export type Context = {
+export type Context<StateT extends object = {}, BodyT = any> = {
   req: IncomingMessage;
   res: ServerResponse;
-  request: Request;
+  request: Request<BodyT>;
   response: Response;
   app: any;
   query: ParsedUrlQuery;
   params: { [key: string]: string };
-  state: { [key: string]: any };
+  state: StateT;
   [key: string]: any;
 };
 
-export type Middleware = (
-  ctx: Context,
+export type Middleware<StateT extends object = {}, BodyT = any> = (
+  ctx: Context<StateT, BodyT>,
   next: () => Promise<any>,
 ) => Promise<void> | void;
