@@ -13,10 +13,11 @@
     "README.md"
   ],
   "scripts": {
-    "test": "ts-node test/test.ts",
+    "test": "mocha --require ts-node/register test/**/*.test.ts",
     "build": "tsc",
     "start": "node dist/core/index.js",
     "dev": "ts-node packages/core/index.ts",
+    "dev:example": "ts-node examples/simple-server.ts",
     "prepublishOnly": "npm run build"
   },
   "repository": {
@@ -29,14 +30,21 @@
     "http",
     "api",
     "typescript",
-    "rustnor"
+    "rustnor",
+    "javascript",
+    "backend",
+    "nodejs"
   ],
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@types/chai": "^5.2.2",
     "@types/mocha": "^10.0.10",
     "@types/node": "^24.1.0",
+    "@types/supertest": "^6.0.3",
+    "chai": "^5.2.1",
     "mocha": "^11.7.1",
+    "supertest": "^7.1.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
   },

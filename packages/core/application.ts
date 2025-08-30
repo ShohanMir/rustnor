@@ -6,15 +6,24 @@ import { Context, Middleware } from "./context";
 
 export class App {
   private middleware: Middleware[] = [];
+  private errorHandler: ((err: any, ctx: Context) => void) | null = null;
 
   use(fn: Middleware) {
     this.middleware.push(fn);
     return this;
   }
 
+  onError(fn: (err: any, ctx: Context) => void) {
+    this.errorHandler = fn;
+  }
+
   listen(...args: any[]) {
     const server = http.createServer(this.callback());
     return server.listen(...args);
+  }
+
+  getListener() {
+    return this.callback();
   }
 
   private callback() {
@@ -35,41 +44,62 @@ export class App {
     req: http.IncomingMessage,
     res: http.ServerResponse,
   ): Context {
+    const response = new Response(res);
+    const request = new Request(req);
     const context: Context = {
       req,
       res,
       app: this,
-      request: { req },
-      response: { res },
+      request,
+      response,
+      query: request.query,
+      params: {},
+      state: {},
     };
     return context;
   }
 
   private handleRequest(
     ctx: Context,
-    fnMiddleware: (ctx: Context) => Promise<any>,
+    fnMiddleware: (ctx: Context, next?: () => Promise<any>) => Promise<any>,
   ) {
     const handleResponse = () => respond(ctx);
-    const onError = (err: any) => this.handleError(err, ctx);
+    const onError = (err: any) => {
+      if (this.errorHandler) {
+        this.errorHandler(err, ctx);
+      } else {
+        this.defaultErrorHandler(err, ctx);
+      }
+      respond(ctx);
+    };
 
     return fnMiddleware(ctx).then(handleResponse).catch(onError);
   }
 
-  private handleError(err: any, ctx: Context) {
-    ctx.res.statusCode = 500;
-    ctx.res.end("Internal Server Error");
+  private defaultErrorHandler(err: any, ctx: Context) {
     console.error("[App Error]", err);
+    ctx.response.status(500).json({ message: "Internal Server Error" });
   }
 }
 
 function respond(ctx: Context) {
-  if (ctx.body) {
-    ctx.res.statusCode = ctx.status || 200;
-    ctx.res.end(
-      typeof ctx.body === "string" ? ctx.body : JSON.stringify(ctx.body),
-    );
+  const { res, response } = ctx;
+  if (response.res.headersSent) {
+    return;
+  }
+
+  if (!response.body) {
+    res.statusCode = 404;
+    res.end("Not Found");
+    return;
+  }
+
+  const body = response.body;
+  if (typeof body === "string") {
+    res.end(body);
+  } else if (typeof body === "object" && body !== null) {
+    res.end(JSON.stringify(body));
   } else {
-    ctx.res.statusCode = 404;
-    ctx.res.end("Not Found");
+    res.end(String(body));
   }
 }

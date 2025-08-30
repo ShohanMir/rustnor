@@ -1,9 +1,15 @@
 import { Context, Middleware } from "../core/context";
 
-export type RouteHandler = (ctx: Context) => void;
+export type Route = {
+  path: string;
+  method: string;
+  handler: Middleware;
+  keys: string[];
+  regexp: RegExp;
+};
 
 export class Router {
-  private routes: { [path: string]: { [method: string]: Middleware } } = {};
+  private routes: Route[] = [];
 
   get(path: string, handler: Middleware) {
     this.addRoute(path, "GET", handler);
@@ -34,24 +40,39 @@ export class Router {
   }
 
   private addRoute(path: string, method: string, handler: Middleware) {
-    if (!this.routes[path]) {
-      this.routes[path] = {};
-    }
-    this.routes[path][method] = handler;
+    const keys: string[] = [];
+    const regexp = new RegExp(
+      `^${path.replace(/:(\w+)/g, (_, key) => {
+        keys.push(key);
+        return "(\[^/]+)";
+      })}/?$`,
+    );
+    this.routes.push({ path, method, handler, keys, regexp });
   }
 
   public getRoutes(): Middleware {
     return async (ctx, next) => {
-      const { method, url } = ctx.req;
-      if (!url || !method) {
+      const { method } = ctx.req;
+      const { pathname } = ctx.request;
+
+      if (!pathname || !method) {
         return next();
       }
 
-      const route = this.routes[url];
-      if (route) {
-        const handler = route[method];
-        if (handler) {
-          return handler(ctx, next);
+      for (const route of this.routes) {
+        if (route.method !== method) {
+          continue;
+        }
+
+        const match = route.regexp.exec(pathname);
+
+        if (match) {
+          const params: { [key: string]: string } = {};
+          for (let i = 0; i < route.keys.length; i++) {
+            params[route.keys[i]] = match[i + 1];
+          }
+          ctx.params = params;
+          return route.handler(ctx, next);
         }
       }
 
