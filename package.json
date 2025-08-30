@@ -1,19 +1,23 @@
 {
   "name": "rustnor",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A modern, lightweight, and fast Node.js web framework for building high-performance APIs and web applications.",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/core/index.js",
+  "types": "dist/core/index.d.ts",
   "files": [
-    "dist",
+    "dist/core",
+    "dist/http",
+    "dist/utils",
+    "dist/router",
     "LICENSE",
     "README.md"
   ],
   "scripts": {
-    "test": "mocha --require ts-node/register test/**/*.ts",
+    "test": "mocha --require ts-node/register test/**/*.test.ts",
     "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "ts-node src/index.ts",
+    "start": "node dist/core/index.js",
+    "dev": "ts-node packages/core/index.ts",
+    "dev:example": "ts-node examples/simple-server.ts",
     "prepublishOnly": "npm run build"
   },
   "repository": {
@@ -26,15 +30,25 @@
     "http",
     "api",
     "typescript",
-    "rustnor"
+    "rustnor",
+    "javascript",
+    "backend",
+    "nodejs"
   ],
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@types/chai": "^5.2.2",
     "@types/mocha": "^10.0.10",
     "@types/node": "^24.1.0",
+    "@types/supertest": "^6.0.3",
+    "chai": "^5.2.1",
     "mocha": "^11.7.1",
+    "supertest": "^7.1.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "ts-mocha": "^11.1.0"
   }
 }

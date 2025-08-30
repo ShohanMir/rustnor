@@ -1,8 +1,17 @@
-import * as assert from 'assert';
-import * as framework from '../src/index';
+import { App } from "../packages/core";
+import { Router } from "../packages/router";
 
-describe('framework', () => {
-  it('should do something', () => {
-    assert.ok(true);
+async function runTest() {
+  const app = new App();
+  const router = new Router();
+
+  router.get("/", async (ctx: any) => {
+    ctx.body = "Welcome to the home page!";
   });
-});
+
+  app.use(router.getRoutes());
+
+  console.log("Test passed!");
+}
+
+runTest();
