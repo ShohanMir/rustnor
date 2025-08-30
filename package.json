@@ -37,6 +37,18 @@
   ],
   "author": "",
   "license": "MIT",
+  "exports": {
+    ".": {
+      "import": "./dist/core/index.js",
+      "require": "./dist/core/index.js",
+      "types": "./dist/core/index.d.ts"
+    },
+    "./router": {
+      "import": "./dist/router/index.js",
+      "require": "./dist/router/index.js",
+      "types": "./dist/router/index.d.ts"
+    }
+  },
   "devDependencies": {
     "@types/chai": "^5.2.2",
     "@types/mocha": "^10.0.10",

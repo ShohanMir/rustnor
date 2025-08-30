@@ -54,7 +54,7 @@ export class App {
       response,
       query: request.query,
       params: {},
-      state: {},
+      state: {} as any,
     };
     return context;
   }
