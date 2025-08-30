@@ -10,6 +10,7 @@ A modern, lightweight, and fast Node.js web framework inspired by Koa, built wit
 - **Request Body Parsing:** Includes a built-in middleware for parsing JSON request bodies.
 - **Convenient Response Helpers:** Simple and expressive API for sending responses (e.g., `ctx.response.json()`).
 - **Extensible Error Handling:** Provides a global `onError` hook for centralized error management.
+- **Static File Serving:** Easily serve static assets like HTML, CSS, and images from a directory.
 
 ## Installation
 
@@ -23,7 +24,7 @@ Here is a complete example of a simple server that demonstrates the core feature
 
 ```typescript
 // Imports are now centralized from the package root
-import { App, json, Context } from "rustnor";
+import { App, json, Context, staticMiddleware } from "rustnor";
 import { Router } from "rustnor/router";
 
 // 1. Initialize the application
@@ -37,6 +38,10 @@ app.onError((err: any, ctx: Context) => {
 });
 
 // 3. Use middleware
+// Serve static files from the 'public' directory
+app.use(staticMiddleware('examples/public'));
+
+// The JSON middleware parses request bodies with "Content-Type: application/json"
 app.use(json());
 
 // 4. Define your routes
@@ -128,6 +133,23 @@ router.post("/user", async (ctx: Context<{}, CreateUserBody>) => {
 - `ctx.response.send(body)`: Sets the response body.
 - `ctx.response.json(body)`: Sends a JSON response.
 - `ctx.response.setHeader(name, value)`: Sets a response header.
+
+### Static File Serving (`staticMiddleware`)
+
+Serves static files from a specified directory. This middleware should typically be placed early in your middleware chain.
+
+- `staticMiddleware(root: string)`: Returns a middleware function that serves files from the `root` directory.
+
+```typescript
+import { App, staticMiddleware } from 'rustnor';
+
+const app = new App();
+
+// Serve files from the 'public' directory
+app.use(staticMiddleware('examples/public'));
+
+// ... your other middleware and routes ...
+```
 
 ## License
 
