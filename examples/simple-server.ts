@@ -1,4 +1,4 @@
-import { App, json, Context } from "../packages/core";
+import { App, json, Context, staticMiddleware } from "../packages/core";
 import { Router } from "../packages/router";
 
 const app = new App();
@@ -10,33 +10,19 @@ app.onError((err: any, ctx: Context) => {
   ctx.response.status(500).json({ error: "An unexpected error occurred." });
 });
 
+// Add the static file serving middleware
+// Serve files from the 'public' directory
+app.use(staticMiddleware("examples/public"));
+
 // Add the JSON body parser middleware
 app.use(json());
 
-// --- How to use the new Generic Types ---
-// You can define the shape of your request body and state for full type-safety.
-/*
-interface CreateUserBody {
-  name: string;
-  email: string;
-}
-
-router.post("/user", async (ctx: Context<{}, CreateUserBody>) => {
-  // ctx.request.body is now fully typed!
-  const user = ctx.request.body;
-  console.log(user.name, user.email);
-
-  ctx.response.status(201).json({
-    message: "User created successfully",
-    received_user: user,
-  });
-});
-*/
-
 router.get("/", async (ctx) => {
-  ctx.response.status(200).send(
-    'Welcome! Try GET /user/123?lang=en, POST to /user with a JSON body, or GET /error to test error handling.',
-  );
+  ctx.response
+    .status(200)
+    .send(
+      "Welcome! Try GET /user/123?lang=en, POST to /user with a JSON body, or GET /error to test error handling. Also try /index.html or /test.txt",
+    );
 });
 
 router.get("/user/:id", async (ctx) => {
@@ -49,7 +35,6 @@ router.get("/user/:id", async (ctx) => {
   });
 });
 
-// This route uses the default `any` type for the body for simplicity.
 router.post("/user", async (ctx) => {
   const user = ctx.request.body;
 
