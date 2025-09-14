@@ -1,4 +1,4 @@
-import { Middleware, Context } from "./context";
+import { Middleware, Context } from "../framework/context";
 
 export interface FastJsonOptions {
   limit?: number; // bytes, default 1MB

@@ -1,4 +1,4 @@
-import { Middleware } from "./context";
+import { Middleware } from "../framework/context";
 import { createGzip, createDeflate } from "zlib";
 
 export interface CompressOptions {

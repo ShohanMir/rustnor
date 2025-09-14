@@ -1,4 +1,4 @@
-import { Middleware } from "./context";
+import { Middleware } from "../framework/context";
 import * as crypto from "crypto";
 
 export interface SessionOptions {

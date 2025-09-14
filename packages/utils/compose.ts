@@ -1,4 +1,4 @@
-import type { Context, Middleware } from "../core/context";
+import type { Context, Middleware } from "../core/framework/context";
 
 export function compose(middleware: Middleware[]) {
   return function (ctx: Context, next?: () => Promise<any>) {

@@ -1,4 +1,4 @@
-import { Middleware } from "./context";
+import { Middleware } from "../framework/context";
 import * as crypto from "crypto";
 
 export interface CookieParserOptions {
@@ -6,7 +6,9 @@ export interface CookieParserOptions {
 }
 
 export const cookieParser = (options: CookieParserOptions = {}): Middleware => {
-  const secrets = Array.isArray(options.secret) ? options.secret : [options.secret || ""];
+  const secrets = Array.isArray(options.secret)
+    ? options.secret
+    : [options.secret || ""];
 
   return async (ctx, next) => {
     const cookieHeader = ctx.req.headers.cookie || "";
@@ -31,7 +33,10 @@ function parse(cookieHeader: string): Record<string, string> {
   return cookies;
 }
 
-function unsign(cookieHeader: string, secrets: string[]): Record<string, string> {
+function unsign(
+  cookieHeader: string,
+  secrets: string[],
+): Record<string, string> {
   const signedCookies: Record<string, string> = {};
   if (!cookieHeader) return signedCookies;
 
@@ -53,5 +58,9 @@ function unsign(cookieHeader: string, secrets: string[]): Record<string, string>
 }
 
 function sign(value: string, secret: string): string {
-  return crypto.createHmac("sha256", secret).update(value).digest("base64").replace(/\=+/g, "");
+  return crypto
+    .createHmac("sha256", secret)
+    .update(value)
+    .digest("base64")
+    .replace(/\=+/g, "");
 }

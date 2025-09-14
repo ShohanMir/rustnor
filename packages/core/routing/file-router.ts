@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
-import { Router } from "../router";
-import { Middleware } from "./context";
+import { Router } from "../../router";
+import { Middleware } from "../framework/context";
 
 export interface FileRouteOptions {
   routesDir?: string;

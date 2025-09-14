@@ -1,4 +1,4 @@
-import { Middleware } from "./context";
+import { Middleware } from "../framework/context";
 
 export interface CORSOptions {
   origin?: string | string[] | ((origin: string | null) => boolean);

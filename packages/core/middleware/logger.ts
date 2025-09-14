@@ -1,4 +1,4 @@
-import { Middleware } from "./context";
+import { Middleware } from "../framework/context";
 
 export interface LoggerOptions {
   level?: "info" | "warn" | "error";

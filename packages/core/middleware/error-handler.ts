@@ -1,4 +1,4 @@
-import { Context, Middleware } from "./context";
+import { Context, Middleware } from "../framework/context";
 
 export interface ErrorHandlerOptions {
   log?: boolean | ((err: any, ctx: Context) => void);
