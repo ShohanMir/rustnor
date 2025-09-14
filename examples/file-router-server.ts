@@ -28,7 +28,7 @@ async function createServer() {
   // Load file-based routes
   console.log("🔍 Scanning routes directory...");
   const fileRouter = await createFileRouter({
-    routesDir: "routes",
+    routesDir: "examples/routes",
     basePath: "",
   });
 
@@ -59,7 +59,7 @@ if (require.main === module) {
       // Enable hot reload in development
       if (process.env.NODE_ENV !== "production") {
         enableHotReload(server, {
-          watchPaths: ["routes/**/*.ts"],
+          watchPaths: ["examples/routes/**/*.ts"],
           verbose: true,
         });
       }

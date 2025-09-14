@@ -19,36 +19,35 @@ describe("File-Based Router", () => {
     fs.writeFileSync(
       path.join(testRoutesDir, "index.ts"),
       `
-      import { Context } from "../../packages/core";
-      export default async function handler(ctx: Context) {
-        ctx.response.json({ route: "home" });
-      }
-    `,
+        import { Context } from "../packages/core";
+        export default async function handler(ctx: Context) {
+          ctx.response.json({ route: "home" });
+        }
+      `,
     );
 
     fs.writeFileSync(
       path.join(testRoutesDir, "users.ts"),
       `
-      import { Context } from "../../packages/core";
-      export async function get(ctx: Context) {
-        ctx.response.json({ route: "users" });
-      }
-    `,
+        import { Context } from "../packages/core";
+        export async function get(ctx: Context) {
+          ctx.response.json({ route: "users" });
+        }
+      `,
     );
 
     fs.writeFileSync(
       path.join(testRoutesDir, "api", "health.ts"),
       `
-      import { Context } from "../../packages/core";
-      export default async function handler(ctx: Context) {
-        ctx.response.json({ status: "ok" });
-      }
-    `,
+        import { Context } from "../../packages/core";
+        export default async function handler(ctx: Context) {
+          ctx.response.json({ status: "ok" });
+        }
+      `,
     );
   });
 
   after(() => {
-    // Clean up test routes directory
     if (fs.existsSync(testRoutesDir)) {
       fs.rmSync(testRoutesDir, { recursive: true, force: true });
     }

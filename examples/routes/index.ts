@@ -1,4 +1,4 @@
-import { Context } from "../packages/core";
+import { Context } from "../../packages/core";
 
 export default async function homeHandler(ctx: Context) {
   ctx.response.json({
