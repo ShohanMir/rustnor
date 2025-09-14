@@ -14,16 +14,21 @@ This directory contains benchmarking utilities to:
 ## Files
 
 - `benchmark.ts` - Core benchmarking utilities and classes
-- `../examples/performance-comparison.ts` - Example usage and comparisons
+- `framework-comparison.ts` - Comprehensive Rustnor vs Express.js comparison
+- `../examples/performance-comparison.ts` - Internal performance comparisons
 
 ## Quick Start
 
 ```bash
-# Run performance comparison
+# Run internal performance comparison
 npm run benchmark
+
+# Run framework comparison (Rustnor vs Express.js)
+npm run benchmark:compare
 
 # Or run directly
 npx ts-node examples/performance-comparison.ts
+npx ts-node benchmark/framework-comparison.ts
 ```
 
 ## Benchmark Classes
