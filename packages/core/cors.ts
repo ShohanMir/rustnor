@@ -1,7 +1,7 @@
 import { Middleware } from "./context";
 
 export interface CORSOptions {
-  origin?: string | string[] | ((origin: string) => boolean);
+  origin?: string | string[] | ((origin: string | null) => boolean);
   methods?: string[];
   allowedHeaders?: string[];
   exposedHeaders?: string[];
@@ -21,18 +21,23 @@ const defaultOptions: Required<CORSOptions> = {
 export const cors = (options: CORSOptions = {}): Middleware => {
   const config = { ...defaultOptions, ...options };
 
+  // Warn on invalid credentials + wildcard
+  if (config.credentials && config.origin === "*") {
+    console.warn(
+      'Warning: "credentials: true" with "origin: *" is insecure and may be blocked by browsers. Use specific origins.',
+    );
+  }
+
   return async (ctx, next) => {
-    const origin = ctx.req.headers.origin;
+    let origin = ctx.req.headers.origin as string | null;
 
     // Handle preflight requests
     if (ctx.req.method === "OPTIONS") {
-      // Set CORS headers for preflight
       setCorsHeaders(ctx, config, origin);
       ctx.response.status(200).send("");
       return;
     }
 
-    // Set CORS headers for actual requests
     setCorsHeaders(ctx, config, origin);
 
     await next();
@@ -42,20 +47,35 @@ export const cors = (options: CORSOptions = {}): Middleware => {
 function setCorsHeaders(
   ctx: any,
   config: Required<CORSOptions>,
-  origin?: string,
+  origin?: string | null,
 ) {
+  let allowOrigin = false;
+  let setOrigin = "";
+
   // Origin
   if (config.origin === "*") {
-    ctx.response.setHeader("Access-Control-Allow-Origin", "*");
+    setOrigin = "*";
+    allowOrigin = true;
   } else if (typeof config.origin === "string") {
-    ctx.response.setHeader("Access-Control-Allow-Origin", config.origin);
+    setOrigin = config.origin;
+    allowOrigin = true;
   } else if (Array.isArray(config.origin)) {
     if (origin && config.origin.includes(origin)) {
-      ctx.response.setHeader("Access-Control-Allow-Origin", origin);
+      setOrigin = origin;
+      allowOrigin = true;
     }
-  } else if (typeof config.origin === "function" && origin) {
+  } else if (typeof config.origin === "function" && origin !== undefined) {
     if (config.origin(origin)) {
-      ctx.response.setHeader("Access-Control-Allow-Origin", origin);
+      setOrigin = origin || "";
+      allowOrigin = true;
+    }
+  }
+
+  if (allowOrigin) {
+    ctx.response.setHeader("Access-Control-Allow-Origin", setOrigin);
+    // Vary header for dynamic origins
+    if (typeof config.origin !== "string" && origin) {
+      ctx.response.setHeader("Vary", "Origin");
     }
   }
 

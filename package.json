@@ -24,6 +24,7 @@
     "dev:hot": "nodemon --exec ts-node examples/simple-server.ts",
     "dev:hot-advanced": "nodemon --exec ts-node examples/advanced-server.ts",
     "dev:hot-file-router": "nodemon --exec ts-node examples/file-router-server.ts",
+    "benchmark": "ts-node examples/performance-comparison.ts",
     "prepublishOnly": "npm run build"
   },
   "repository": {
@@ -56,6 +57,7 @@
     }
   },
   "devDependencies": {
+    "@types/busboy": "^1.5.4",
     "@types/chai": "^5.2.2",
     "@types/mocha": "^10.0.10",
     "@types/node": "^24.1.0",
@@ -65,9 +67,11 @@
     "mocha": "^11.7.1",
     "nodemon": "^3.1.0",
     "supertest": "^7.1.4",
+    "ts-mocha": "^11.1.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.2",
-    "ts-mocha": "^11.1.0"
+    "typescript": "^5.9.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "busboy": "^1.6.0"
+  }
 }

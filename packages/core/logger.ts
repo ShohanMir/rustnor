@@ -2,7 +2,7 @@ import { Middleware } from "./context";
 
 export interface LoggerOptions {
   level?: "info" | "warn" | "error";
-  format?: "combined" | "common" | "dev" | "short" | "tiny";
+  format?: "combined" | "common" | "dev" | "short" | "tiny" | "json";
   skip?: (ctx: any) => boolean;
 }
 
@@ -23,6 +23,10 @@ export const logger = (options: LoggerOptions = {}): Middleware => {
       await next();
       return;
     }
+
+    // Pre-request log
+    const preLog = formatLogPre(config.format, ctx, start);
+    console.log(preLog);
 
     await next();
 
@@ -49,12 +53,52 @@ function shouldLog(configLevel: string, messageLevel: string): boolean {
   );
 }
 
+function getStatusColor(status: number): string {
+  if (status >= 500) return "\x1b[31m"; // Red
+  if (status >= 400) return "\x1b[33m"; // Yellow
+  if (status >= 300) return "\x1b[36m"; // Cyan
+  return "\x1b[32m"; // Green
+}
+
+function getResetColor(): string {
+  return "\x1b[0m";
+}
+
+function formatLogPre(
+  format: string,
+  ctx: any,
+  start: number,
+): string | object {
+  const timestamp = new Date().toISOString();
+  const method = ctx.req.method;
+  const url = ctx.req.url;
+  const ip = ctx.req.socket.remoteAddress || "-";
+
+  switch (format) {
+    case "json":
+      return JSON.stringify({
+        timestamp,
+        method,
+        url,
+        ip,
+        event: "request_start",
+        startTime: start,
+      });
+    case "dev":
+      return `\x1b[36m${method} ${url} started${getResetColor()}`;
+    case "short":
+      return `${method} ${url} started`;
+    default:
+      return `[${timestamp}] ${method} ${url} started`;
+  }
+}
+
 function formatLog(
   format: string,
   ctx: any,
   ms: number,
   status: number,
-): string {
+): string | object {
   const timestamp = new Date().toISOString();
   const method = ctx.req.method;
   const url = ctx.req.url;
@@ -62,6 +106,17 @@ function formatLog(
   const ip = ctx.req.socket.remoteAddress || "-";
 
   switch (format) {
+    case "json":
+      return JSON.stringify({
+        timestamp,
+        method,
+        url,
+        status,
+        duration: ms,
+        ip,
+        userAgent,
+        event: "request_end",
+      });
     case "combined":
       return `${ip} - - [${timestamp}] "${method} ${url} HTTP/1.1" ${status} - "${userAgent}" ${ms}ms`;
 
@@ -81,15 +136,4 @@ function formatLog(
     default:
       return `[${timestamp}] ${method} ${url} ${status} ${ms}ms`;
   }
-}
-
-function getStatusColor(status: number): string {
-  if (status >= 500) return "\x1b[31m"; // Red
-  if (status >= 400) return "\x1b[33m"; // Yellow
-  if (status >= 300) return "\x1b[36m"; // Cyan
-  return "\x1b[32m"; // Green
-}
-
-function getResetColor(): string {
-  return "\x1b[0m";
 }

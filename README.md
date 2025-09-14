@@ -7,7 +7,8 @@ A modern, lightweight, and fast Node.js web framework inspired by Koa, built wit
 - **TypeScript First:** Clean, generic-powered, and type-safe API.
 - **Modern Middleware:** Uses an async/await-based middleware pipeline.
 - **Advanced Router:** Supports route parameters and query string parsing out-of-the-box.
-- **Request Body Parsing:** Includes a built-in middleware for parsing JSON request bodies.
+- **Request Body Parsing:** Includes built-in middleware for parsing JSON, form data, and multipart bodies.
+- **High-Performance Components:** Optional optimized middleware for maximum performance.
 - **Convenient Response Helpers:** Simple and expressive API for sending responses (e.g., `ctx.response.json()`).
 - **Extensible Error Handling:** Provides a global `onError` hook for centralized error management.
 - **Static File Serving:** Easily serve static assets like HTML, CSS, and images from a directory.
@@ -24,6 +25,55 @@ A modern, lightweight, and fast Node.js web framework inspired by Koa, built wit
 ```bash
 npm install rustnor
 ```
+
+## Performance Features
+
+### High-Performance JSON Middleware
+
+For applications handling large JSON payloads, Rustnor provides an optimized JSON parser:
+
+```typescript
+import { App, fastJson } from "rustnor";
+
+const app = new App();
+
+// Use high-performance JSON parsing
+app.use(
+  fastJson({
+    limit: 1024 * 1024, // 1MB limit
+    strict: true, // Security validation
+    streamThreshold: 64 * 1024, // Use streaming for >64KB
+  }),
+);
+```
+
+**Performance Benefits:**
+
+- **47-52% faster** JSON parsing for large payloads
+- **Streaming support** for memory efficiency
+- **Security hardening** with prototype pollution protection
+- **Automatic optimization** based on payload size
+
+### Benchmarking
+
+Compare performance between standard and optimized implementations:
+
+```bash
+npm run benchmark
+```
+
+See `benchmark/README.md` for detailed benchmarking documentation and framework comparisons.
+
+### Future: Native Extensions
+
+For ultimate performance, native extensions using Rust/WebAssembly are planned for future releases. These will provide:
+
+- Native JSON processing with Rust's performance
+- Cryptographic operations
+- Image processing capabilities
+- Advanced compression algorithms
+
+_Note: Native extensions will be available as optional packages to keep the core framework lightweight._
 
 ## Getting Started
 
