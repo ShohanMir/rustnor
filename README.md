@@ -92,19 +92,6 @@ routes/
     └── health.ts   # GET /api/health
 ```
 
-## 🏃‍♂️ Run Examples
-
-```bash
-# Simple server
-npm run dev:example
-
-# Advanced server with all features
-npm run dev:advanced
-
-# File-based routing example
-npm run dev:file-router
-```
-
 ## 📊 Performance
 
 NortherJS provides industry-leading performance with specialized middleware:
