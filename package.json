@@ -30,7 +30,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ShohanMir/rustnor.git"
+    "url": "git+https://github.com/ShohanMir/northern.git"
   },
   "keywords": [
     "web",
@@ -38,7 +38,7 @@
     "http",
     "api",
     "typescript",
-    "rustnor",
+    "northern",
     "javascript",
     "backend",
     "nodejs"
