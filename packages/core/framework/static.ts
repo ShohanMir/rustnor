@@ -30,11 +30,10 @@ export const staticMiddleware = (root: string): Middleware => {
 
         ctx.response.setHeader("Content-Type", contentType);
         ctx.response.status(200);
-        ctx.res.end((await fs.readFile(filePath)).toString());
-        return; // File served, stop middleware chain
+        ctx.res.end(await fs.readFile(filePath));
+        return;
       }
     } catch (err: any) {
-      // If file not found or other fs error, just pass to next middleware
       if (err.code !== "ENOENT") {
         console.error(`Error serving static file ${filePath}:`, err);
       }

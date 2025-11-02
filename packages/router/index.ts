@@ -1,4 +1,4 @@
-import { Context, Middleware } from "../core/context";
+import { Context, Middleware } from "../core/framework/context";
 
 export type Route = {
   path: string;
@@ -44,7 +44,7 @@ export class Router {
     const regexp = new RegExp(
       `^${path.replace(/:(\w+)/g, (_, key) => {
         keys.push(key);
-        return "(\[^/]+)";
+        return "([^/]+)";
       })}/?$`,
     );
     this.routes.push({ path, method, handler, keys, regexp });

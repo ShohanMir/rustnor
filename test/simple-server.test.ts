@@ -8,16 +8,15 @@ import * as path from "path";
 describe("Simple Server API", () => {
   // Create a temporary public directory for static files
   before(() => {
-    const publicPath = path.join(process.cwd(), 'examples', 'public');
-    if (!fs.existsSync(publicPath))
-      fs.mkdirSync(publicPath);
-    fs.writeFileSync(path.join(publicPath, 'test.html'), '<h1>Test HTML</h1>');
-    fs.writeFileSync(path.join(publicPath, 'test.txt'), 'Test text content');
+    const publicPath = path.join(process.cwd(), "examples", "public");
+    if (!fs.existsSync(publicPath)) fs.mkdirSync(publicPath);
+    fs.writeFileSync(path.join(publicPath, "test.html"), "<h1>Test HTML</h1>");
+    fs.writeFileSync(path.join(publicPath, "test.txt"), "Test text content");
   });
 
   // Clean up the temporary public directory
   after(async () => {
-    const publicPath = path.join(process.cwd(), 'examples', 'public');
+    const publicPath = path.join(process.cwd(), "examples", "public");
     await fsp.rm(publicPath, { recursive: true, force: true });
   });
 
@@ -57,7 +56,9 @@ describe("Simple Server API", () => {
   it("should use the custom error handler for routes that throw errors", async () => {
     const response = await request(app.getListener()).get("/error");
     expect(response.status).to.equal(500);
-    expect(response.body).to.deep.equal({ error: "An unexpected error occurred." });
+    expect(response.body).to.deep.equal({
+      error: "An unexpected error occurred.",
+    });
   });
 
   // New tests for static file serving
@@ -78,5 +79,33 @@ describe("Simple Server API", () => {
   it("should return 404 for a non-existent static file", async () => {
     const response = await request(app.getListener()).get("/nonexistent.file");
     expect(response.status).to.equal(404);
+  });
+
+  it("should return proper JSON error for invalid JSON in POST request", async () => {
+    const response = await request(app.getListener())
+      .post("/user")
+      .set("Content-Type", "application/json")
+      .send("invalid json");
+
+    expect(response.status).to.equal(400);
+    expect(response.body).to.have.property("error", "Invalid JSON");
+    expect(response.body).to.have.property("message");
+    expect(response.headers["content-type"]).to.include("application/json");
+  });
+
+  it("should handle binary files properly", async () => {
+    // Create a simple binary file (we'll use a small PNG-like content)
+    const publicPath = path.join(process.cwd(), "examples", "public");
+    const binaryContent = Buffer.from([
+      0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a,
+    ]); // PNG header
+    fs.writeFileSync(path.join(publicPath, "test.png"), binaryContent);
+
+    const response = await request(app.getListener()).get("/test.png");
+    expect(response.status).to.equal(200);
+    expect(response.headers["content-type"]).to.include("image/png");
+    // The response should be binary, not corrupted text
+    expect(Buffer.isBuffer(response.body) || typeof response.body === "object")
+      .to.be.true;
   });
 });

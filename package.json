@@ -1,8 +1,9 @@
 {
-  "name": "rustnor",
-  "version": "1.1.2",
+  "name": "northernjs",
+  "version": "1.1.3",
   "description": "A modern, lightweight, and fast Node.js web framework for building high-performance APIs and web applications.",
   "main": "dist/core/index.js",
+  "module": "dist/core/index.js",
   "types": "dist/core/index.d.ts",
   "files": [
     "dist/core",
@@ -19,11 +20,17 @@
     "start": "node dist/core/index.js",
     "dev": "ts-node packages/core/index.ts",
     "dev:example": "ts-node examples/simple-server.ts",
+    "dev:advanced": "ts-node examples/advanced-server.ts",
+    "dev:file-router": "ts-node examples/file-router-server.ts",
+    "dev:hot": "nodemon --exec ts-node examples/simple-server.ts",
+    "dev:hot-advanced": "nodemon --exec ts-node examples/advanced-server.ts",
+    "dev:hot-file-router": "nodemon --exec ts-node examples/file-router-server.ts",
+    "benchmark": "ts-node benchmark/framework-comparison.ts",
     "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ShohanMir/rustnor.git"
+    "url": "git+https://github.com/ShohanMir/northern.git"
   },
   "keywords": [
     "web",
@@ -31,7 +38,7 @@
     "http",
     "api",
     "typescript",
-    "rustnor",
+    "northern",
     "javascript",
     "backend",
     "nodejs"
@@ -50,17 +57,26 @@
       "types": "./dist/router/index.d.ts"
     }
   },
+  "dependencies": {
+    "busboy": "^1.6.0",
+    "morgan": "^1.10.1"
+  },
   "devDependencies": {
+    "@types/busboy": "^1.5.4",
     "@types/chai": "^5.2.2",
+    "@types/express": "^5.0.5",
     "@types/mocha": "^10.0.10",
     "@types/node": "^24.1.0",
     "@types/supertest": "^6.0.3",
     "chai": "^5.2.1",
+    "chokidar": "^3.6.0",
+    "compression": "^1.8.1",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
     "mocha": "^11.7.1",
+    "nodemon": "^3.1.0",
     "supertest": "^7.1.4",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.2",
-    "ts-mocha": "^11.1.0"
-  },
-  "dependencies": {}
+    "typescript": "^5.9.2"
+  }
 }
