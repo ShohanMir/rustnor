@@ -1,4 +1,4 @@
-import { Context } from "../../../packages/core";
+import { Context } from "northernjs";
 
 export default async function healthCheck(ctx: Context) {
   ctx.response.json({

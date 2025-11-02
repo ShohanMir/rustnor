@@ -1,8 +1,8 @@
-import { Context } from "../../packages/core";
+import { Context } from "northernjs";
 
 export default async function homeHandler(ctx: Context) {
   ctx.response.json({
-    message: "Welcome to Rustnor File-Based Routing!",
+    message: "Welcome to NorthernJS File-Based Routing!",
     routes: [
       "GET /",
       "GET /users",

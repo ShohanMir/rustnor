@@ -1,14 +1,14 @@
-# Rustnor
+# NorthernJS
 
 A modern, lightweight, and fast Node.js web framework inspired by Koa, built with TypeScript for a great developer experience.
 
-[![npm version](https://badge.fury.io/js/rustnor.svg)](https://badge.fury.io/js/rustnor)
+[![npm version](https://badge.fury.io/js/northernjs.svg)](https://badge.fury.io/js/northernjs)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## ✨ Features
 
 - **🚀 TypeScript First** - Clean, generic-powered, and type-safe API
-- **⚡ High Performance** - 80-98% faster HTTP request handling than Express.js
+- **⚡ High Performance** - Up to 2x faster HTTP request handling than Express.js
 - **🔧 Modern Middleware** - Async/await-based pipeline with strong typing
 - **🛣️ Advanced Routing** - Route parameters, query parsing, and file-based routing
 - **📦 Rich Ecosystem** - CORS, logging, compression, sessions, authentication
@@ -19,14 +19,14 @@ A modern, lightweight, and fast Node.js web framework inspired by Koa, built wit
 ## 📦 Installation
 
 ```bash
-npm install rustnor
+npm install northernjs
 ```
 
 ## 🚀 Quick Start
 
 ```typescript
-import { App, json } from "rustnor";
-import { Router } from "rustnor/router";
+import { App, json } from "northernjs";
+import { Router } from "northernjs/router";
 
 const app = new App();
 const router = new Router();
@@ -36,7 +36,7 @@ app.use(json());
 
 // Routes
 router.get("/", (ctx) => {
-  ctx.response.json({ message: "Hello, Rustnor!" });
+  ctx.response.json({ message: "Hello, NorthernJS!" });
 });
 
 router.post("/users", (ctx) => {
@@ -77,22 +77,9 @@ router.post("/users", async (ctx: Context<{}, User>) => {
 });
 ```
 
-### High-Performance JSON
-
-```typescript
-import { fastJson } from "rustnor";
-
-app.use(
-  fastJson({
-    limit: 1024 * 1024, // 1MB
-    streamThreshold: 64 * 1024, // Streaming for large payloads
-  }),
-);
-```
-
 ### Superior HTTP Performance
 
-Rustnor's optimized request handling provides 80-98% faster HTTP responses compared to Express.js, making it ideal for high-throughput APIs and real-time applications.
+NortherJS's optimized request handling provides faster HTTP responses compared to Express.js, making it ideal for high-throughput APIs and real-time applications.
 
 ### File-Based Routing
 
@@ -120,11 +107,10 @@ npm run dev:file-router
 
 ## 📊 Performance
 
-Rustnor provides industry-leading performance with specialized middleware:
+NortherJS provides industry-leading performance with specialized middleware:
 
-- **80-98% faster HTTP request handling** than Express.js
-- **35% faster JSON parsing** for small payloads with fastJson
-- **20x faster app initialization** than Express.js
+- **Up to 2x faster HTTP request handling** than Express.js
+- **35x faster app initialization** than Express.js
 - **Automatic compression** with gzip/deflate
 - **Streaming support** for memory efficiency
 - **Optimized routing** with regex-based matching

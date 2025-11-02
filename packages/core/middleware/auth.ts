@@ -1,17 +1,17 @@
 import { Middleware } from "../framework/context";
 
 export interface BasicAuthOptions {
-  users?: Record<string, string>; // username -> password mapping
+  hashedUsers?: Record<string, string>; // username -> hashed password mapping
   realm?: string;
   skip?: (ctx: any) => boolean;
   customAuth?: (
     username: string,
-    password: string,
+    password: string
   ) => Promise<boolean> | boolean;
 }
 
 const defaultOptions: Required<BasicAuthOptions> = {
-  users: {},
+  hashedUsers: {},
   realm: "Protected Area",
   skip: () => false,
   customAuth: () => false,
@@ -35,7 +35,7 @@ export const basicAuth = (options: BasicAuthOptions = {}): Middleware => {
 
     const base64Credentials = authHeader.slice(6); // Remove "Basic "
     const credentials = Buffer.from(base64Credentials, "base64").toString(
-      "ascii",
+      "ascii"
     );
     const [username, password] = credentials.split(":");
 
@@ -49,7 +49,11 @@ export const basicAuth = (options: BasicAuthOptions = {}): Middleware => {
     if (config.customAuth) {
       isAuthenticated = await config.customAuth(username, password);
     } else {
-      isAuthenticated = config.users[username] === password;
+      // For development/testing only - requires pre-hashed passwords
+      const hashedPassword = config.hashedUsers[username];
+      if (hashedPassword) {
+        isAuthenticated = hashPassword(password) === hashedPassword;
+      }
     }
 
     if (!isAuthenticated) {
@@ -75,9 +79,17 @@ export function hashPassword(password: string): string {
 }
 
 // Helper function to create users object with hashed passwords
+// WARNING: This is for development/testing only. Use proper password hashing in production.
 export function createUsers(
-  users: Record<string, string>,
+  users: Record<string, string>
 ): Record<string, string> {
+  console.warn(
+    "⚠️  WARNING: createUsers() uses weak hashing and is for development/testing only!"
+  );
+  console.warn(
+    "⚠️  Do not use this in production. Implement proper password hashing with salt."
+  );
+
   const hashedUsers: Record<string, string> = {};
   for (const [username, password] of Object.entries(users)) {
     hashedUsers[username] = hashPassword(password);

@@ -1,4 +1,7 @@
-import { FileRouter, createFileRouter } from "../packages/core/file-router";
+import {
+  FileRouter,
+  createFileRouter,
+} from "../packages/core/routing/file-router";
 import { Router } from "../packages/router";
 import * as fs from "fs";
 import * as path from "path";
@@ -23,7 +26,7 @@ describe("File-Based Router", () => {
         export default async function handler(ctx: Context) {
           ctx.response.json({ route: "home" });
         }
-      `,
+      `
     );
 
     fs.writeFileSync(
@@ -33,7 +36,7 @@ describe("File-Based Router", () => {
         export async function get(ctx: Context) {
           ctx.response.json({ route: "users" });
         }
-      `,
+      `
     );
 
     fs.writeFileSync(
@@ -43,7 +46,7 @@ describe("File-Based Router", () => {
         export default async function handler(ctx: Context) {
           ctx.response.json({ status: "ok" });
         }
-      `,
+      `
     );
   });
 

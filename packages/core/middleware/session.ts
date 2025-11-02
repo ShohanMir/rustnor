@@ -45,7 +45,7 @@ class MemoryStore implements SessionStore {
 }
 
 const defaultOptions: Required<SessionOptions> = {
-  name: "rustnor.sid",
+  name: "northern.sid",
   secret: crypto.randomBytes(16).toString("hex"),
   maxAge: 86400000, // 24 hours
   httpOnly: true,
@@ -89,7 +89,7 @@ function getSessionId(ctx: any, name: string): string | null {
 function setSessionCookie(
   ctx: any,
   sid: string,
-  config: Required<SessionOptions>,
+  config: Required<SessionOptions>
 ) {
   const cookieOptions = [
     `${config.name}=${sid}`,

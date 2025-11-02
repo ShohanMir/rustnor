@@ -16,4 +16,3 @@ export { validateInput } from "./middleware/validation";
 export { bodyParser } from "./parsers/body-parser";
 export { cookieParser } from "./parsers/cookie-parser";
 export { errorHandler } from "./middleware/error-handler";
-export { fastJson } from "./parsers/fast-json";

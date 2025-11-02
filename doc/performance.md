@@ -1,41 +1,15 @@
 # Performance
 
-Rustnor is designed for high performance with several optimizations and benchmarking tools to help you achieve the best results.
+NorthernJS is designed for high performance with several optimizations and benchmarking tools to help you achieve the best results.
 
 ## Performance Features
-
-### High-Performance JSON Parsing
-
-Rustnor includes a specialized JSON parser that provides significant performance improvements for large payloads.
-
-```typescript
-import { App, fastJson } from "rustnor";
-
-const app = new App();
-
-// Use optimized JSON parsing
-app.use(
-  fastJson({
-    limit: 1024 * 1024, // 1MB limit
-    streamThreshold: 64 * 1024, // Use streaming for >64KB
-    strict: true, // Security validation
-  }),
-);
-```
-
-**Performance Benefits:**
-
-- **47-52% faster** JSON parsing compared to standard `JSON.parse()`
-- **Memory-efficient streaming** for payloads over 64KB
-- **Automatic optimization** based on payload size
-- **Security hardening** with prototype pollution protection
 
 ### Automatic Compression
 
 Response compression reduces bandwidth and improves load times.
 
 ```typescript
-import { App, compress } from "rustnor";
+import { App, compress } from "northernjs";
 
 const app = new App();
 app.use(
@@ -43,7 +17,7 @@ app.use(
     threshold: 1024, // Compress responses > 1KB
     level: 6, // Compression level (1-9)
     types: ["text/plain", "application/json", "text/html"],
-  }),
+  })
 );
 ```
 
@@ -104,32 +78,18 @@ console.log("Routing Benchmark Results:", routingResults);
 
 ## Performance Best Practices
 
-### 1. Use Fast JSON for Large Payloads
-
-```typescript
-// Good for large payloads
-app.use(
-  fastJson({
-    streamThreshold: 50 * 1024, // 50KB
-  }),
-);
-
-// Standard JSON for small payloads
-app.use(json());
-```
-
-### 2. Enable Compression
+### 1. Enable Compression
 
 ```typescript
 app.use(
   compress({
     threshold: 1024, // Don't compress small responses
     level: 6, // Balance speed vs compression
-  }),
+  })
 );
 ```
 
-### 3. Optimize Middleware Order
+### 2. Optimize Middleware Order
 
 ```typescript
 // 1. Early returns (security, CORS)
@@ -148,7 +108,7 @@ app.use(router.getRoutes());
 app.use(errorHandler());
 ```
 
-### 4. Use Streaming for Large Responses
+### 3. Use Streaming for Large Responses
 
 ```typescript
 router.get("/large-file", (ctx) => {
@@ -158,18 +118,18 @@ router.get("/large-file", (ctx) => {
 });
 ```
 
-### 5. Cache Static Assets
+### 4. Cache Static Assets
 
 ```typescript
 app.use(
   staticMiddleware("public", {
     maxAge: 31536000, // 1 year for static assets
     immutable: true,
-  }),
+  })
 );
 ```
 
-### 6. Database Connection Pooling
+### 5. Database Connection Pooling
 
 ```typescript
 // Use connection pooling for databases
@@ -180,7 +140,7 @@ const pool = new Pool({
 });
 ```
 
-### 7. Implement Caching
+### 6. Implement Caching
 
 ```typescript
 const cache = new Map();
@@ -254,7 +214,7 @@ app.use(
   session({
     store: new RedisStore({ client: redisClient }),
     // ... other options
-  }),
+  })
 );
 ```
 
@@ -268,7 +228,7 @@ app.use(
     store: new RedisStore({ client: redisClient }),
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 100,
-  }),
+  })
 );
 ```
 
@@ -336,7 +296,7 @@ if (cluster.isPrimary) {
 // ecosystem.config.js
 module.exports = {
   apps: [{
-    name: "rustnor-app",
+    name: "northern-app",
     script: "dist/app.js",
     instances: "max",
     exec_mode: "cluster",
@@ -374,7 +334,7 @@ CMD ["node", "dist/app.js"]
 
 ### Native Extensions (Planned)
 
-Rustnor plans to offer native extensions for ultimate performance:
+NorthernJS plans to offer native extensions for ultimate performance:
 
 - **Rust-based JSON processing** with zero-copy parsing
 - **WebAssembly modules** for cryptographic operations
@@ -390,7 +350,6 @@ Recent benchmark results (run `npm run benchmark`):
 ```
 JSON Parsing (1MB payload, 1000 iterations):
 - Standard JSON: 2,450ms
-- Fast JSON: 1,180ms
 - Improvement: 52% faster
 
 Routing (10,000 requests):

@@ -8,8 +8,8 @@ import {
   basicAuth,
   enableHotReload,
   Context,
-} from "../packages/core";
-import { Router } from "../packages/router";
+} from "northernjs";
+import { Router } from "northernjs/router";
 
 const app = new App();
 const router = new Router();
@@ -19,26 +19,26 @@ app.use(
   cors({
     origin: ["http://localhost:3000", "http://localhost:8080"],
     credentials: true,
-  }),
+  })
 );
 
 app.use(
   logger({
     format: "dev",
-  }),
+  })
 );
 
 app.use(
   compress({
     threshold: 512,
-  }),
+  })
 );
 
 app.use(
   session({
-    name: "rustnor.sid",
+    name: "northern.sid",
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
-  }),
+  })
 );
 
 app.use(json());
@@ -46,9 +46,9 @@ app.use(json());
 // Basic auth for admin routes
 app.use(
   basicAuth({
-    users: { admin: "password123" },
+    hashedUsers: { admin: "ef61a579c907bbed674c0dbcbcf7f7af4999b3f3" }, // hash of "password123"
     skip: (ctx) => !ctx.req.url?.startsWith("/admin"),
-  }),
+  })
 );
 
 // Error handler
@@ -66,7 +66,7 @@ router.get("/", async (ctx) => {
   (ctx as any).state.session.visitCount = visitCount + 1;
 
   ctx.response.json({
-    message: "Welcome to Rustnor Advanced Server!",
+    message: "Welcome to NorthernJS Advanced Server!",
     features: [
       "CORS enabled",
       "Request logging",
@@ -102,7 +102,7 @@ app.use(router.getRoutes());
 
 if (require.main === module) {
   const server = app.listen(8080, () => {
-    console.log("🚀 Advanced Rustnor server running on port 8080");
+    console.log("🚀 Advanced NorthernJS server running on port 8080");
     console.log("Features enabled: CORS, Logging, Compression, Sessions, Auth");
   });
 

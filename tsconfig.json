@@ -11,7 +11,12 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "northernjs": ["packages/core"],
+      "northernjs/router": ["packages/router"]
+    }
   },
   "include": ["packages/**/*"],
   "exclude": ["node_modules", "dist", "test"]

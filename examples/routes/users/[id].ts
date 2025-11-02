@@ -1,4 +1,4 @@
-import { Context } from "../../../packages/core";
+import { Context } from "northernjs";
 
 const users = [
   { id: 1, name: "John Doe", email: "john@example.com" },

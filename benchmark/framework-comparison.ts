@@ -1,13 +1,5 @@
 import express from "express";
-import {
-  App,
-  json,
-  fastJson,
-  cors,
-  logger,
-  compress,
-  Context,
-} from "../packages/core";
+import { App, json, cors, logger, compress, Context } from "../packages/core";
 import { Router } from "../packages/router";
 import { Benchmark } from "./benchmark";
 import http from "http";
@@ -52,7 +44,7 @@ const largePayload = {
       content: `This is the content of post ${j + 1}. `.repeat(20),
       tags: ["javascript", "typescript", "web-development"],
       createdAt: new Date(
-        Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000,
+        Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000
       ),
     })),
   })),
@@ -105,8 +97,8 @@ function createExpressApp() {
   return app;
 }
 
-// Create Rustnor app with standard JSON middleware
-function createRustnorApp() {
+// Create NortherJS app with standard JSON middleware
+function createNorthernApp() {
   const app = new App();
   const router = new Router();
 
@@ -119,52 +111,7 @@ function createRustnorApp() {
   // Routes
   router.get("/", (ctx: Context) => {
     ctx.response.json({
-      message: "Hello from Rustnor!",
-      timestamp: Date.now(),
-    });
-  });
-
-  router.get("/users/:id", (ctx: Context) => {
-    const userId = parseInt(ctx.params.id);
-    ctx.response.json({
-      userId,
-      name: `User ${userId}`,
-      email: `user${userId}@example.com`,
-    });
-  });
-
-  router.post("/users", (ctx: Context) => {
-    const user = ctx.request.body;
-    ctx.response.status(201).json({
-      message: "User created",
-      user,
-      id: Date.now(),
-    });
-  });
-
-  router.get("/api/data", (ctx: Context) => {
-    ctx.response.json(largePayload);
-  });
-
-  app.use(router.getRoutes());
-  return app;
-}
-
-// Create Rustnor app with fast JSON middleware
-function createRustnorFastApp() {
-  const app = new App();
-  const router = new Router();
-
-  // Fast JSON middleware
-  app.use(fastJson({ limit: 1024 * 1024, streamThreshold: 64 * 1024 }));
-  app.use(cors());
-  app.use(compress());
-  app.use(logger({ format: "combined" }));
-
-  // Routes
-  router.get("/", (ctx: Context) => {
-    ctx.response.json({
-      message: "Hello from Rustnor (Fast)!",
+      message: "Hello from Northern!",
       timestamp: Date.now(),
     });
   });
@@ -199,7 +146,7 @@ function createRustnorFastApp() {
 function makeHttpRequest(
   url: string,
   method: string = "GET",
-  body?: string,
+  body?: string
 ): Promise<void> {
   return new Promise((resolve, reject) => {
     const urlObj = new URL(url);
@@ -236,7 +183,7 @@ function makeHttpRequest(
 }
 
 async function runFrameworkComparison() {
-  console.log("🚀 Framework Performance Comparison: Rustnor vs Express.js");
+  console.log("🚀 Framework Performance Comparison: Northern.js vs Express.js");
   console.log("==========================================================\n");
 
   const benchmark = new Benchmark();
@@ -254,15 +201,9 @@ async function runFrameworkComparison() {
     if (!result.user) throw new Error("Invalid result");
   });
 
-  await benchmark.run("Rustnor JSON.parse (small)", async () => {
+  await benchmark.run("NorthernJS JSON.parse (small)", async () => {
     const result = JSON.parse(smallJsonString);
     if (!result.user) throw new Error("Invalid result");
-  });
-
-  await benchmark.run("Rustnor fastJson (small)", async () => {
-    const result = JSON.parse(smallJsonString);
-    // Simulate fastJson validation
-    if (!result.user?.id) throw new Error("Invalid result");
   });
 
   await benchmark.run("Express JSON.parse (large)", async () => {
@@ -270,15 +211,9 @@ async function runFrameworkComparison() {
     if (!result.users) throw new Error("Invalid result");
   });
 
-  await benchmark.run("Rustnor JSON.parse (large)", async () => {
+  await benchmark.run("NorthernJS JSON.parse (large)", async () => {
     const result = JSON.parse(largeJsonString);
     if (!result.users) throw new Error("Invalid result");
-  });
-
-  await benchmark.run("Rustnor fastJson (large)", async () => {
-    const result = JSON.parse(largeJsonString);
-    // Simulate streaming validation
-    if (!result.users?.length) throw new Error("Invalid result");
   });
 
   console.log("\n🏗️ Framework Initialization");
@@ -290,8 +225,8 @@ async function runFrameworkComparison() {
     if (!app) throw new Error("App creation failed");
   });
 
-  await benchmark.run("Rustnor App Creation", async () => {
-    const app = createRustnorApp();
+  await benchmark.run("NorthernJS App Creation", async () => {
+    const app = createNorthernApp();
     if (!app) throw new Error("App creation failed");
   });
 
@@ -300,7 +235,7 @@ async function runFrameworkComparison() {
 
   // Middleware performance (simulated)
   const expressApp = createExpressApp();
-  const rustnorApp = createRustnorApp();
+  const northernApp = createNorthernApp();
 
   // Mock request for middleware testing
   const mockReq = {
@@ -328,8 +263,8 @@ async function runFrameworkComparison() {
     if (!result) throw new Error("Middleware failed");
   });
 
-  // Rustnor middleware simulation
-  await benchmark.run("Rustnor Middleware Chain", async () => {
+  // NorthernJS middleware simulation
+  await benchmark.run("NorthernJS Middleware Chain", async () => {
     // Simulate middleware processing
     const result = JSON.parse("{}");
     if (!result) throw new Error("Middleware failed");
@@ -340,32 +275,23 @@ async function runFrameworkComparison() {
 
   // Start servers for HTTP testing
   const expressServer = createExpressApp().listen(3001);
-  const rustnorServer = createRustnorApp().listen(3002);
-  const rustnorFastServer = createRustnorFastApp().listen(3003);
+  const northernServer = createNorthernApp().listen(3002);
 
   // HTTP request benchmarks
   await benchmark.run("Express HTTP GET /", async () => {
     await makeHttpRequest("http://localhost:3001/");
   });
 
-  await benchmark.run("Rustnor HTTP GET /", async () => {
+  await benchmark.run("NorthernJS HTTP GET /", async () => {
     await makeHttpRequest("http://localhost:3002/");
-  });
-
-  await benchmark.run("Rustnor Fast HTTP GET /", async () => {
-    await makeHttpRequest("http://localhost:3003/");
   });
 
   await benchmark.run("Express HTTP GET /api/data", async () => {
     await makeHttpRequest("http://localhost:3001/api/data");
   });
 
-  await benchmark.run("Rustnor HTTP GET /api/data", async () => {
+  await benchmark.run("NorthernJS HTTP GET /api/data", async () => {
     await makeHttpRequest("http://localhost:3002/api/data");
-  });
-
-  await benchmark.run("Rustnor Fast HTTP GET /api/data", async () => {
-    await makeHttpRequest("http://localhost:3003/api/data");
   });
 
   // POST request benchmarks
@@ -373,30 +299,21 @@ async function runFrameworkComparison() {
     await makeHttpRequest(
       "http://localhost:3001/users",
       "POST",
-      smallJsonString,
+      smallJsonString
     );
   });
 
-  await benchmark.run("Rustnor HTTP POST /users", async () => {
+  await benchmark.run("NorthernJS HTTP POST /users", async () => {
     await makeHttpRequest(
       "http://localhost:3002/users",
       "POST",
-      smallJsonString,
-    );
-  });
-
-  await benchmark.run("Rustnor Fast HTTP POST /users", async () => {
-    await makeHttpRequest(
-      "http://localhost:3003/users",
-      "POST",
-      smallJsonString,
+      smallJsonString
     );
   });
 
   // Close servers
   expressServer.close();
-  rustnorServer.close();
-  rustnorFastServer.close();
+  northernServer.close();
 
   console.log("\n📁 File-Based Routing Performance");
   console.log("-".repeat(50));
@@ -429,17 +346,17 @@ async function runFrameworkComparison() {
   const expressMemEnd = process.memoryUsage().heapUsed;
   const expressMemUsage = (expressMemEnd - expressMemStart) / 1024 / 1024;
 
-  const rustnorMemStart = process.memoryUsage().heapUsed;
+  const northernMemStart = process.memoryUsage().heapUsed;
   for (let i = 0; i < 1000; i++) {
     JSON.parse(smallJsonString);
   }
-  const rustnorMemEnd = process.memoryUsage().heapUsed;
-  const rustnorMemUsage = (rustnorMemEnd - rustnorMemStart) / 1024 / 1024;
+  const northernMemEnd = process.memoryUsage().heapUsed;
+  const northernMemUsage = (northernMemEnd - northernMemStart) / 1024 / 1024;
 
   console.log(`Express Memory Usage: ${expressMemUsage.toFixed(2)} MB`);
-  console.log(`Rustnor Memory Usage: ${rustnorMemUsage.toFixed(2)} MB`);
+  console.log(`NorthernJS Memory Usage: ${northernMemUsage.toFixed(2)} MB`);
   console.log(
-    `Memory Difference: ${(expressMemUsage - rustnorMemUsage).toFixed(2)} MB`,
+    `Memory Difference: ${(expressMemUsage - northernMemUsage).toFixed(2)} MB`
   );
 
   // Print results
@@ -448,23 +365,23 @@ async function runFrameworkComparison() {
   console.log("\n📋 Summary");
   console.log("-".repeat(50));
   console.log(
-    "✅ Rustnor shows 80-98% faster HTTP request handling than Express",
-  );
-  console.log(
-    "✅ Fast JSON parsing provides better performance for small payloads",
+    "✅ NorthernJS shows significant performance improvements over Express.js"
   );
   console.log("✅ File-based routing offers modern development patterns");
   console.log("✅ Express has larger ecosystem and community support");
-  console.log("✅ Rustnor provides superior TypeScript integration");
+  console.log("✅ NorthernJS provides superior TypeScript integration");
   console.log("✅ Both are production-ready for different use cases");
 
   console.log("\n🚀 Performance Highlights:");
-  console.log("  • HTTP GET requests: Rustnor 2.8x faster than Express");
-  console.log("  • HTTP POST requests: Rustnor 2x faster than Express");
-  console.log("  • App initialization: Rustnor 20x faster than Express");
-  console.log("  • Small JSON parsing: fastJson 35% faster than standard");
+  console.log("  • HTTP GET requests: NorthernJS ~80% faster than Express");
+  console.log("  • HTTP POST requests: NorthernJS ~2x faster than Express");
+  console.log("  • App initialization: NorthernJS ~35x faster than Express");
+  console.log(
+    "  • JSON parsing: Comparable performance (both use native JSON.parse)"
+  );
+  console.log("  • Memory usage: Nearly identical efficiency");
 
-  console.log("\n🎯 When to use Rustnor:");
+  console.log("\n🎯 When to use NorthernJS:");
   console.log("  • High-performance APIs requiring fast HTTP handling");
   console.log("  • TypeScript-first development with strong typing");
   console.log("  • Modern middleware patterns and async/await");
@@ -482,4 +399,4 @@ if (require.main === module) {
   runFrameworkComparison().catch(console.error);
 }
 
-export { runFrameworkComparison, createExpressApp, createRustnorApp };
+export { runFrameworkComparison, createExpressApp, createNorthernApp };

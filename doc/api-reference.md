@@ -1,6 +1,6 @@
 # API Reference
 
-Complete API documentation for Rustnor framework components.
+Complete API documentation for NorthernJS framework components.
 
 ## Core Classes
 
@@ -114,7 +114,7 @@ Function signature for middleware.
 ```typescript
 type Middleware<StateT = {}, BodyT = any> = (
   ctx: Context<StateT, BodyT>,
-  next: () => Promise<void>,
+  next: () => Promise<void>
 ) => Promise<void> | void;
 ```
 
@@ -133,23 +133,6 @@ interface JsonOptions {
   limit?: number; // Max body size in bytes (default: 100KB)
   strict?: boolean; // Only parse application/json (default: true)
   reviver?: (key: string, value: any) => any;
-}
-```
-
-### Fast JSON Parser
-
-```typescript
-function fastJson(options?: FastJsonOptions): Middleware;
-```
-
-**Options:**
-
-```typescript
-interface FastJsonOptions {
-  limit?: number; // Max body size (default: 1MB)
-  strict?: boolean; // Security validation (default: true)
-  reviver?: (key: string, value: any) => any;
-  streamThreshold?: number; // Streaming threshold (default: 64KB)
 }
 ```
 
@@ -286,7 +269,7 @@ interface BasicAuthOptions {
   skip?: (ctx: Context) => boolean;
   customAuth?: (
     username: string,
-    password: string,
+    password: string
   ) => Promise<boolean> | boolean;
 }
 ```
@@ -480,7 +463,7 @@ interface Route {
 ### Framework Errors
 
 ```typescript
-class RustnorError extends Error {
+class NorthernError extends Error {
   constructor(message: string, statusCode?: number);
   statusCode: number;
 }
@@ -504,7 +487,7 @@ const DEFAULT_MAX_REQUESTS = 5;
 
 // Session defaults
 const DEFAULT_SESSION_MAX_AGE = 86400000; // 24 hours
-const DEFAULT_SESSION_NAME = "rustnor.sid";
+const DEFAULT_SESSION_NAME = "northern.sid";
 ```
 
 ## Environment Variables
@@ -566,7 +549,7 @@ import {
   rateLimit,
   security,
   Router,
-} from "rustnor";
+} from "northernjs";
 
 const app = new App();
 const router = new Router();
@@ -578,7 +561,7 @@ app.use(
     origin: process.env.ALLOWED_ORIGINS?.split(",") || [
       "http://localhost:3000",
     ],
-  }),
+  })
 );
 
 // Performance middleware
@@ -591,7 +574,7 @@ app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 100,
-  }),
+  })
 );
 
 // Session management
@@ -599,7 +582,7 @@ app.use(
   session({
     secret: process.env.SESSION_SECRET || "default-secret",
     maxAge: 24 * 60 * 60 * 1000,
-  }),
+  })
 );
 
 // Routes

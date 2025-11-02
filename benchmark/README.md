@@ -1,12 +1,12 @@
-# Rustnor Benchmark Suite
+# NorthernJS Benchmark Suite
 
-Performance benchmarking tools for Rustnor framework and comparisons with other frameworks.
+Performance benchmarking tools for NorthernJS framework and comparisons with other frameworks.
 
 ## Overview
 
 This directory contains benchmarking utilities to:
 
-- Measure Rustnor's performance characteristics
+- Measure NorthernJS's performance characteristics
 - Compare standard vs optimized implementations
 - Benchmark against other frameworks (Express, Koa, etc.)
 - Track performance regressions
@@ -14,7 +14,7 @@ This directory contains benchmarking utilities to:
 ## Files
 
 - `benchmark.ts` - Core benchmarking utilities and classes
-- `framework-comparison.ts` - Comprehensive Rustnor vs Express.js comparison
+- `framework-comparison.ts` - Comprehensive NorthernJS vs Express.js comparison
 - `../examples/performance-comparison.ts` - Internal performance comparisons
 
 ## Quick Start
@@ -23,7 +23,7 @@ This directory contains benchmarking utilities to:
 # Run internal performance comparison
 npm run benchmark
 
-# Run framework comparison (Rustnor vs Express.js)
+# Run framework comparison (NorthernJS vs Express.js)
 npm run benchmark:compare
 
 # Or run directly
@@ -49,7 +49,7 @@ const result = await benchmark.run(
     // Your code here
     return myFunction();
   },
-  1000,
+  1000
 );
 
 console.log(`${result.name}: ${result.averageTime}ms average`);
@@ -65,7 +65,7 @@ const jsonResult = await benchmarkJson(
   "Fast JSON Parse",
   testData,
   (data) => JSON.parse(data),
-  1000,
+  1000
 );
 
 // Benchmark middleware
@@ -73,7 +73,7 @@ const middlewareResult = await benchmarkMiddleware(
   "My Middleware",
   myMiddleware,
   mockContext,
-  1000,
+  1000
 );
 ```
 
@@ -86,8 +86,8 @@ const middlewareResult = await benchmarkMiddleware(
 const expressApp = express();
 expressApp.use(express.json());
 
-const rustnorApp = new App();
-rustnorApp.use(json());
+const northernApp = new App();
+northernApp.use(json());
 
 // Run benchmarks...
 ```
@@ -99,8 +99,8 @@ rustnorApp.use(json());
 const koaApp = new Koa();
 koaApp.use(koaBodyParser());
 
-const rustnorApp = new App();
-rustnorApp.use(json());
+const northernApp = new App();
+northernApp.use(json());
 ```
 
 ## Performance Metrics
@@ -129,7 +129,7 @@ async function customBenchmark() {
       // Your performance-critical code
       return await myExpensiveOperation();
     },
-    10000,
+    10000
   );
 
   benchmark.printResults();

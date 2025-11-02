@@ -1,4 +1,4 @@
-// TypeScript Developer Experience Comparison: Rustnor vs Express.js
+// TypeScript Developer Experience Comparison: NorthernJS vs Express.js
 
 // ===== EXPRESS.JS EXAMPLE =====
 // Express has limited TypeScript support out of the box
@@ -22,8 +22,8 @@ expressApp.post("/users", (req, res) => {
   res.json({ created: user });
 });
 
-// ===== RUSTNOR EXAMPLE =====
-// Rustnor provides full TypeScript integration
+// ===== NORTHERN EXAMPLE =====
+// NorthernJS provides full TypeScript integration
 import { App, json, Context } from "../packages/core";
 import { Router } from "../packages/router";
 
@@ -39,11 +39,11 @@ interface UserResponse {
   createdAt: string;
 }
 
-const rustnorApp = new App();
+const northernApp = new App();
 const router = new Router();
 
 // Middleware with type safety
-rustnorApp.use(json());
+northernApp.use(json());
 
 // Route handler with full type safety
 router.post("/users", async (ctx: Context<{}, CreateUserRequest>) => {
@@ -61,7 +61,7 @@ router.post("/users", async (ctx: Context<{}, CreateUserRequest>) => {
   ctx.response.status(201).json(user);
 });
 
-rustnorApp.use(router.getRoutes());
+northernApp.use(router.getRoutes());
 
 // ===== ADVANCED TYPESCRIPT FEATURES =====
 
@@ -92,4 +92,4 @@ router.get("/profile", async (ctx: AuthenticatedContext) => {
   });
 });
 
-export { expressApp, rustnorApp };
+export { expressApp, northernApp };

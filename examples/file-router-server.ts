@@ -6,7 +6,7 @@ import {
   createFileRouter,
   enableHotReload,
   Context,
-} from "../packages/core";
+} from "northernjs";
 
 async function createServer() {
   const app = new App();
@@ -43,7 +43,9 @@ if (require.main === module) {
   createServer()
     .then((app) => {
       const server = app.listen(8080, () => {
-        console.log("🚀 File-Based Router Server running on port 8080");
+        console.log(
+          "🚀 File-Based Router NorthernJS Server running on port 8080"
+        );
         console.log("📁 Routes automatically loaded from /routes directory");
         console.log("");
         console.log("Available routes:");

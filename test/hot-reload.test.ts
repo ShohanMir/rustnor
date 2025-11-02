@@ -1,4 +1,4 @@
-import { HotReload } from "../packages/core/hot-reload";
+import { HotReload } from "../packages/core/framework/hot-reload";
 import * as http from "http";
 import { expect } from "chai";
 

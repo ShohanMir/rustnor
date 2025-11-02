@@ -1,7 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
 import { Router } from "../../router";
-import { Middleware } from "../framework/context";
 
 export interface FileRouteOptions {
   routesDir?: string;
@@ -38,7 +37,7 @@ export class FileRouter {
 
   private async scanDirectory(
     dirPath: string,
-    currentPath: string,
+    currentPath: string
   ): Promise<void> {
     const items = fs.readdirSync(dirPath);
 
@@ -63,7 +62,7 @@ export class FileRouter {
   private async processRouteFile(
     filePath: string,
     currentPath: string,
-    filename: string,
+    filename: string
   ): Promise<void> {
     try {
       // Remove file extension to get route path
@@ -146,7 +145,7 @@ export class FileRouter {
 
 // Convenience function
 export async function createFileRouter(
-  options?: FileRouteOptions,
+  options?: FileRouteOptions
 ): Promise<Router> {
   const fileRouter = new FileRouter(options);
   return await fileRouter.scanRoutes();

@@ -5,8 +5,10 @@
     "rootDir": ".",
     "declaration": false,
     "declarationMap": false,
-    "sourceMap": true
+    "sourceMap": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true
   },
-  "include": ["test/**/*.ts"],
+  "include": ["test/**/*.ts", "examples/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }

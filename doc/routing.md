@@ -1,14 +1,14 @@
 # Routing
 
-Rustnor provides flexible routing capabilities with support for traditional route definitions and file-based routing inspired by Next.js.
+NorthernJS provides flexible routing capabilities with support for traditional route definitions and file-based routing inspired by Next.js.
 
 ## Traditional Routing
 
 Use the `Router` class for programmatic route definitions.
 
 ```typescript
-import { App } from "rustnor";
-import { Router } from "rustnor/router";
+import { App } from "northernjs";
+import { Router } from "northernjs/router";
 
 const app = new App();
 const router = new Router();
@@ -77,7 +77,7 @@ router.get("/search", (ctx) => {
   });
 });
 
-// URL: /search?q=rustnor&limit=20&sort=date
+// URL: /search?q=northern&limit=20&sort=date
 ```
 
 ### Route Handlers
@@ -143,7 +143,7 @@ routes/
 
 ```typescript
 // routes/index.ts
-import { Context } from "rustnor";
+import { Context } from "northernjs";
 
 export default async function handler(ctx: Context) {
   ctx.response.json({ message: "Hello World!" });
@@ -154,7 +154,7 @@ export default async function handler(ctx: Context) {
 
 ```typescript
 // routes/users/index.ts
-import { Context } from "rustnor";
+import { Context } from "northernjs";
 
 export async function get(ctx: Context) {
   const users = await getUsersFromDB();
@@ -172,7 +172,7 @@ export async function post(ctx: Context) {
 
 ```typescript
 // routes/users/[id].ts
-import { Context } from "rustnor";
+import { Context } from "northernjs";
 
 export async function get(ctx: Context) {
   const userId = ctx.params.id;
@@ -203,7 +203,7 @@ export async function delete(ctx: Context) {
 ### Setup
 
 ```typescript
-import { App, createFileRouter } from "rustnor";
+import { App, createFileRouter } from "northernjs";
 
 const app = new App();
 
@@ -319,7 +319,7 @@ router.get("/users/:id", async (ctx) => {
 ## Route Validation
 
 ```typescript
-import { validateInput } from "rustnor";
+import { validateInput } from "northernjs";
 
 router.post("/users", validateInput(), async (ctx) => {
   const { name, email } = ctx.request.body;

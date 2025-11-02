@@ -1,6 +1,6 @@
 # Examples
 
-This page contains complete examples demonstrating common patterns and use cases with Rustnor.
+This page contains complete examples demonstrating common patterns and use cases with NorthernJS.
 
 ## Running Examples
 
@@ -22,8 +22,8 @@ npm run dev:file-router
 A complete REST API with CRUD operations:
 
 ```typescript
-import { App, json, cors } from "rustnor";
-import { Router } from "rustnor/router";
+import { App, json, cors } from "northernjs";
+import { Router } from "northernjs/router";
 
 const app = new App();
 const router = new Router();
@@ -116,8 +116,8 @@ app.listen(3000, () => {
 Example with session-based authentication:
 
 ```typescript
-import { App, json, session, basicAuth } from "rustnor";
-import { Router } from "rustnor/router";
+import { App, json, session, basicAuth } from "northernjs";
+import { Router } from "northernjs/router";
 
 const app = new App();
 const router = new Router();
@@ -128,7 +128,7 @@ app.use(
     name: "myapp.sid",
     secret: "your-secret-key",
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
-  }),
+  })
 );
 
 app.use(json());
@@ -143,7 +143,7 @@ const users = [
 router.post("/login", (ctx) => {
   const { username, password } = ctx.request.body;
   const user = users.find(
-    (u) => u.username === username && u.password === password,
+    (u) => u.username === username && u.password === password
   );
 
   if (!user) {
@@ -206,8 +206,8 @@ app.listen(3000, () => {
 Handling multipart file uploads:
 
 ```typescript
-import { App, bodyParser } from "rustnor";
-import { Router } from "rustnor/router";
+import { App, bodyParser } from "northernjs";
+import { Router } from "northernjs/router";
 import * as fs from "fs";
 import * as path from "path";
 
@@ -219,7 +219,7 @@ app.use(
   bodyParser({
     multipart: true,
     limit: 10 * 1024 * 1024, // 10MB
-  }),
+  })
 );
 
 // Ensure uploads directory exists
@@ -313,7 +313,7 @@ router.get("/files/:filename", (ctx) => {
   ctx.response.setHeader("Content-Type", "application/octet-stream");
   ctx.response.setHeader(
     "Content-Disposition",
-    `attachment; filename="${filename}"`,
+    `attachment; filename="${filename}"`
   );
   ctx.response.body = fs.createReadStream(filepath);
 });
@@ -330,8 +330,8 @@ app.listen(3000, () => {
 WebSocket-like functionality using Server-Sent Events:
 
 ```typescript
-import { App, json, cors } from "rustnor";
-import { Router } from "rustnor/router";
+import { App, json, cors } from "northernjs";
+import { Router } from "northernjs/router";
 
 const app = new App();
 const router = new Router();
@@ -434,8 +434,8 @@ app.listen(3000, () => {
 Basic GraphQL integration:
 
 ```typescript
-import { App, json } from "rustnor";
-import { Router } from "rustnor/router";
+import { App, json } from "northernjs";
+import { Router } from "northernjs/router";
 import { graphql, buildSchema } from "graphql";
 
 const app = new App();
@@ -544,8 +544,8 @@ app.listen(3000, () => {
 Example of a microservice with service discovery:
 
 ```typescript
-import { App, json, cors } from "rustnor";
-import { Router } from "rustnor/router";
+import { App, json, cors } from "northernjs";
+import { Router } from "northernjs/router";
 
 // Service configuration
 const SERVICE_NAME = process.env.SERVICE_NAME || "user-service";
@@ -652,7 +652,7 @@ app.onError((err, ctx) => {
 
 app.listen(SERVICE_PORT, SERVICE_HOST, () => {
   console.log(
-    `${SERVICE_NAME} running on http://${SERVICE_HOST}:${SERVICE_PORT}`,
+    `${SERVICE_NAME} running on http://${SERVICE_HOST}:${SERVICE_PORT}`
   );
   console.log(`Health check: http://${SERVICE_HOST}:${SERVICE_PORT}/health`);
   console.log(`Discovery: http://${SERVICE_HOST}:${SERVICE_PORT}/discovery`);

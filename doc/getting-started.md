@@ -1,13 +1,13 @@
-# Getting Started with Rustnor
+# Getting Started with NorthernJS
 
-Welcome to Rustnor! This guide will help you get up and running with your first Rustnor application.
+Welcome to NorthernJS! This guide will help you get up and running with your first NorthernJS application.
 
 ## Installation
 
-Install Rustnor using npm:
+Install NorthernJS using npm:
 
 ```bash
-npm install rustnor
+npm install northern
 ```
 
 ## Your First Application
@@ -15,8 +15,8 @@ npm install rustnor
 Create a new file called `server.ts`:
 
 ```typescript
-import { App, json } from "rustnor";
-import { Router } from "rustnor/router";
+import { App, json } from "northernjs";
+import { Router } from "northernjs/router";
 
 const app = new App();
 const router = new Router();
@@ -27,7 +27,7 @@ app.use(json());
 // Define routes
 router.get("/", (ctx) => {
   ctx.response.json({
-    message: "Hello, Rustnor!",
+    message: "Hello, NorthernJS!",
     timestamp: new Date().toISOString(),
   });
 });
@@ -97,7 +97,7 @@ curl -X POST http://localhost:3000/users \
 For larger applications, consider this structure:
 
 ```
-my-rustnor-app/
+my-northern-app/
 ├── src/
 │   ├── routes/
 │   │   ├── index.ts
@@ -157,4 +157,4 @@ Add these to your `package.json`:
 
 - Check the [examples](../examples/) directory
 - Run `npm run dev:example` to see a working example
-- Visit our [GitHub repository](https://github.com/ShohanMir/rustnor) for issues and discussions
+- Visit our [GitHub repository](https://github.com/ShohanMir/northernjs) for issues and discussions

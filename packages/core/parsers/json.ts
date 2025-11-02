@@ -94,7 +94,7 @@ async function parseJson(req: any, limit: number): Promise<any> {
 
 async function parseForm(
   req: any,
-  limit: number,
+  limit: number
 ): Promise<Record<string, string | string[]>> {
   return new Promise((resolve, reject) => {
     let data = "";

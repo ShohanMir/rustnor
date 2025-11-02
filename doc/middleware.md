@@ -1,10 +1,10 @@
 # Middleware
 
-Rustnor provides a rich set of built-in middleware to handle common web application needs. All middleware follows the same async/await pattern and can be composed together.
+NorthernJS provides a rich set of built-in middleware to handle common web application needs. All middleware follows the same async/await pattern and can be composed together.
 
 ## Core Concepts
 
-Middleware in Rustnor are functions that have access to the `Context` object and can:
+Middleware in NorthernJS are functions that have access to the `Context` object and can:
 
 - Modify the request/response
 - Call the next middleware in the chain
@@ -22,7 +22,7 @@ type Middleware = (ctx: Context, next: () => Promise<void>) => Promise<void>;
 Parses JSON request bodies and makes them available as `ctx.request.body`.
 
 ```typescript
-import { App, json } from "rustnor";
+import { App, json } from "northernjs";
 
 const app = new App();
 app.use(json()); // Parses application/json requests
@@ -39,35 +39,12 @@ router.post("/users", (ctx) => {
 - `strict` (boolean): Only parse `application/json` content type
 - `reviver` (function): JSON.parse reviver function
 
-### Fast JSON Parser (`fastJson`)
-
-High-performance JSON parser optimized for large payloads with streaming support.
-
-```typescript
-import { App, fastJson } from "rustnor";
-
-const app = new App();
-app.use(
-  fastJson({
-    limit: 1024 * 1024, // 1MB limit
-    streamThreshold: 64 * 1024, // Use streaming for >64KB
-    strict: true, // Security validation
-  }),
-);
-```
-
-**Performance Benefits:**
-
-- 47-52% faster than standard JSON parsing
-- Memory-efficient streaming for large payloads
-- Built-in security validations
-
 ### Body Parser (`bodyParser`)
 
 Advanced body parser supporting JSON, form data, and multipart uploads.
 
 ```typescript
-import { App, bodyParser } from "rustnor";
+import { App, bodyParser } from "northernjs";
 
 const app = new App();
 app.use(
@@ -75,7 +52,7 @@ app.use(
     limit: 1024 * 100, // 100KB
     multipart: true, // Enable file uploads
     strict: false, // Allow non-JSON content types
-  }),
+  })
 );
 ```
 
@@ -84,7 +61,7 @@ app.use(
 Enable Cross-Origin Resource Sharing with flexible configuration.
 
 ```typescript
-import { App, cors } from "rustnor";
+import { App, cors } from "northernjs";
 
 const app = new App();
 app.use(
@@ -93,7 +70,7 @@ app.use(
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
     maxAge: 86400,
-  }),
+  })
 );
 ```
 
@@ -111,7 +88,7 @@ app.use(
 Comprehensive request logging with multiple output formats.
 
 ```typescript
-import { App, logger } from "rustnor";
+import { App, logger } from "northernjs";
 
 const app = new App();
 app.use(
@@ -119,7 +96,7 @@ app.use(
     level: "info", // error, warn, info
     format: "dev", // combined, common, dev, short, tiny, json
     skip: (ctx) => ctx.req.url?.includes("/health"),
-  }),
+  })
 );
 ```
 
@@ -137,7 +114,7 @@ app.use(
 Automatic gzip/deflate compression for better performance.
 
 ```typescript
-import { App, compress } from "rustnor";
+import { App, compress } from "northernjs";
 
 const app = new App();
 app.use(
@@ -145,7 +122,7 @@ app.use(
     threshold: 1024, // Minimum size to compress (bytes)
     level: 6, // Compression level (1-9)
     types: ["text/plain", "application/json", "text/html"],
-  }),
+  })
 );
 ```
 
@@ -154,7 +131,7 @@ app.use(
 Serve static files from a directory.
 
 ```typescript
-import { App, staticMiddleware } from "rustnor";
+import { App, staticMiddleware } from "northernjs";
 
 const app = new App();
 app.use(staticMiddleware("public")); // Serve files from ./public/
@@ -165,7 +142,7 @@ app.use(staticMiddleware("public")); // Serve files from ./public/
 Cookie-based session storage with customizable stores.
 
 ```typescript
-import { App, session, MemoryStore } from "rustnor";
+import { App, session, MemoryStore } from "northernjs";
 
 const app = new App();
 app.use(
@@ -174,7 +151,7 @@ app.use(
     secret: "your-secret-key",
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
     store: new MemoryStore(), // or RedisStore, etc.
-  }),
+  })
 );
 
 router.get("/visit", (ctx) => {
@@ -184,20 +161,63 @@ router.get("/visit", (ctx) => {
 });
 ```
 
+> **⚠️ Production Warning:** The built-in `MemoryStore` is designed for development and testing only. All session data will be lost when the server restarts. For production use, you must implement a persistent session store (Redis, MongoDB, PostgreSQL, etc.) by creating a class that implements the `SessionStore` interface.
+>
+> **Example Redis Store:**
+>
+> ```typescript
+> import { Redis } from "ioredis";
+>
+> class RedisStore implements SessionStore {
+>   constructor(private redis: Redis) {}
+>
+>   async get(sid: string): Promise<any> {
+>     const data = await this.redis.get(`session:${sid}`);
+>     return data ? JSON.parse(data) : null;
+>   }
+>
+>   async set(sid: string, session: any, maxAge?: number): Promise<void> {
+>     await this.redis.setex(
+>       `session:${sid}`,
+>       maxAge / 1000,
+>       JSON.stringify(session)
+>     );
+>   }
+>
+>   async destroy(sid: string): Promise<void> {
+>     await this.redis.del(`session:${sid}`);
+>   }
+> }
+> ```
+
 ### Basic Authentication (`basicAuth`)
 
-HTTP Basic authentication middleware.
+HTTP Basic authentication middleware for development and testing.
+
+> **⚠️ Production Warning:** This basic auth implementation uses simple SHA256 hashing without salt and is intended for development/testing only. It is NOT secure for production use. For production applications, implement proper authentication with salted password hashing (bcrypt, argon2) and consider using JWT, OAuth, or other secure authentication methods.
 
 ```typescript
-import { App, basicAuth } from "rustnor";
+import { App, basicAuth, createUsers } from "northernjs";
 
 const app = new App();
+
+// Development/Testing only - uses pre-hashed passwords
+const users = createUsers({
+  admin: "password123",
+  user: "secret456",
+});
+
 app.use(
   basicAuth({
-    users: { admin: "password123" },
+    hashedUsers: users, // Use pre-hashed passwords only
     realm: "Admin Area",
     skip: (ctx) => ctx.req.url === "/public",
-  }),
+    // For production, use customAuth instead:
+    // customAuth: async (username, password) => {
+    //   // Implement proper authentication logic here
+    //   return await verifyUser(username, password);
+    // }
+  })
 );
 
 router.get("/admin", (ctx) => {
@@ -210,7 +230,7 @@ router.get("/admin", (ctx) => {
 Prevent abuse with configurable request limits.
 
 ```typescript
-import { App, rateLimit } from "rustnor";
+import { App, rateLimit } from "northernjs";
 
 const app = new App();
 app.use(
@@ -219,7 +239,7 @@ app.use(
     max: 100, // 100 requests per window
     message: "Too many requests",
     statusCode: 429,
-  }),
+  })
 );
 ```
 
@@ -236,7 +256,7 @@ app.use(
 Set security headers to protect against common web vulnerabilities.
 
 ```typescript
-import { App, security } from "rustnor";
+import { App, security } from "northernjs";
 
 const app = new App();
 app.use(
@@ -246,7 +266,7 @@ app.use(
       "default-src": ["'self'"],
       "script-src": ["'self'", "'unsafe-inline'"],
     },
-  }),
+  })
 );
 ```
 
@@ -265,7 +285,7 @@ app.use(
 Redirect HTTP requests to HTTPS.
 
 ```typescript
-import { App, enforceHTTPS } from "rustnor";
+import { App, enforceHTTPS } from "northernjs";
 
 const app = new App();
 app.use(
@@ -273,7 +293,7 @@ app.use(
     redirectPort: 443,
     redirectStatus: 301, // or 302
     skip: (ctx) => process.env.NODE_ENV === "development",
-  }),
+  })
 );
 ```
 
@@ -282,7 +302,7 @@ app.use(
 Sanitize and validate user inputs to prevent XSS and injection attacks.
 
 ```typescript
-import { App, validateInput } from "rustnor";
+import { App, validateInput } from "northernjs";
 
 const app = new App();
 app.use(
@@ -290,7 +310,7 @@ app.use(
     sanitizeQuery: true,
     sanitizeBody: true,
     sanitizeHeaders: false,
-  }),
+  })
 );
 ```
 
@@ -299,7 +319,7 @@ app.use(
 Global error handling middleware.
 
 ```typescript
-import { App, errorHandler } from "rustnor";
+import { App, errorHandler } from "northernjs";
 
 const app = new App();
 app.use(
@@ -307,7 +327,7 @@ app.use(
     log: true,
     html: (err, ctx) => `<h1>Error ${err.status}</h1><p>${err.message}</p>`,
     json: (err, ctx) => ({ error: err.message, status: err.status }),
-  }),
+  })
 );
 ```
 
@@ -316,7 +336,7 @@ app.use(
 Create your own middleware by following this pattern:
 
 ```typescript
-import { Middleware } from "rustnor";
+import { Middleware } from "northernjs";
 
 const myMiddleware: Middleware = async (ctx, next) => {
   // Do something before
@@ -374,7 +394,7 @@ app.use((ctx, next) => {
 Combine multiple middleware into one:
 
 ```typescript
-import { compose } from "rustnor/utils";
+import { compose } from "northernjs/utils";
 
 const apiMiddleware = compose([cors(), json(), rateLimit(), validateInput()]);
 
