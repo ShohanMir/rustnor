@@ -6,10 +6,9 @@ import {
   compress,
   session,
   basicAuth,
-  enableHotReload,
   Context,
-} from "northernjs";
-import { Router } from "northernjs/router";
+} from "../packages/core";
+import { Router } from "../packages/router";
 
 const app = new App();
 const router = new Router();
@@ -19,26 +18,26 @@ app.use(
   cors({
     origin: ["http://localhost:3000", "http://localhost:8080"],
     credentials: true,
-  })
+  }),
 );
 
 app.use(
   logger({
     format: "dev",
-  })
+  }),
 );
 
 app.use(
   compress({
     threshold: 512,
-  })
+  }),
 );
 
 app.use(
   session({
     name: "northern.sid",
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
-  })
+  }),
 );
 
 app.use(json());
@@ -48,7 +47,7 @@ app.use(
   basicAuth({
     hashedUsers: { admin: "ef61a579c907bbed674c0dbcbcf7f7af4999b3f3" }, // hash of "password123"
     skip: (ctx) => !ctx.req.url?.startsWith("/admin"),
-  })
+  }),
 );
 
 // Error handler
@@ -105,15 +104,6 @@ if (require.main === module) {
     console.log("🚀 Advanced NorthernJS server running on port 8080");
     console.log("Features enabled: CORS, Logging, Compression, Sessions, Auth");
   });
-
-  // Enable hot reload in development
-  if (process.env.NODE_ENV !== "production") {
-    enableHotReload(server, {
-      watchPaths: ["packages/**/*.ts", "examples/**/*.ts"],
-      ignored: ["node_modules/**", "**/*.test.ts"],
-      verbose: true,
-    });
-  }
 }
 
 export { app };

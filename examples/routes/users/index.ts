@@ -1,4 +1,4 @@
-import { Context } from "northernjs";
+import { Context } from "@northernjs";
 
 export async function get(ctx: Context) {
   ctx.response.json({

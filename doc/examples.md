@@ -128,7 +128,7 @@ app.use(
     name: "myapp.sid",
     secret: "your-secret-key",
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
-  })
+  }),
 );
 
 app.use(json());
@@ -143,7 +143,7 @@ const users = [
 router.post("/login", (ctx) => {
   const { username, password } = ctx.request.body;
   const user = users.find(
-    (u) => u.username === username && u.password === password
+    (u) => u.username === username && u.password === password,
   );
 
   if (!user) {
@@ -198,130 +198,6 @@ app.use(router.getRoutes());
 
 app.listen(3000, () => {
   console.log("Auth API running on http://localhost:3000");
-});
-```
-
-## File Upload API
-
-Handling multipart file uploads:
-
-```typescript
-import { App, bodyParser } from "northernjs";
-import { Router } from "northernjs/router";
-import * as fs from "fs";
-import * as path from "path";
-
-const app = new App();
-const router = new Router();
-
-// Body parser with multipart support
-app.use(
-  bodyParser({
-    multipart: true,
-    limit: 10 * 1024 * 1024, // 10MB
-  })
-);
-
-// Ensure uploads directory exists
-const uploadsDir = path.join(__dirname, "uploads");
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir);
-}
-
-// Single file upload
-router.post("/upload", (ctx) => {
-  const { fields, files } = ctx.request.body;
-
-  if (!files || !files.file) {
-    ctx.response.status(400).json({ error: "No file uploaded" });
-    return;
-  }
-
-  const file = Array.isArray(files.file) ? files.file[0] : files.file;
-  const filename = `${Date.now()}-${file.filename}`;
-  const filepath = path.join(uploadsDir, filename);
-
-  // Move file to uploads directory
-  fs.renameSync(file.data.path, filepath);
-
-  ctx.response.json({
-    message: "File uploaded successfully",
-    filename,
-    size: file.data.length,
-    mimetype: file.mimetype,
-  });
-});
-
-// Multiple file upload
-router.post("/upload-multiple", (ctx) => {
-  const { fields, files } = ctx.request.body;
-
-  if (!files || !files.files) {
-    ctx.response.status(400).json({ error: "No files uploaded" });
-    return;
-  }
-
-  const uploadedFiles = [];
-  const fileList = Array.isArray(files.files) ? files.files : [files.files];
-
-  for (const file of fileList) {
-    const filename = `${Date.now()}-${file.filename}`;
-    const filepath = path.join(uploadsDir, filename);
-
-    fs.renameSync(file.data.path, filepath);
-
-    uploadedFiles.push({
-      filename,
-      originalName: file.filename,
-      size: file.data.length,
-      mimetype: file.mimetype,
-    });
-  }
-
-  ctx.response.json({
-    message: `${uploadedFiles.length} files uploaded`,
-    files: uploadedFiles,
-  });
-});
-
-// List uploaded files
-router.get("/files", (ctx) => {
-  const files = fs.readdirSync(uploadsDir).map((filename) => {
-    const filepath = path.join(uploadsDir, filename);
-    const stats = fs.statSync(filepath);
-
-    return {
-      filename,
-      size: stats.size,
-      uploadedAt: stats.mtime,
-    };
-  });
-
-  ctx.response.json({ files });
-});
-
-// Download file
-router.get("/files/:filename", (ctx) => {
-  const filename = ctx.params.filename;
-  const filepath = path.join(uploadsDir, filename);
-
-  if (!fs.existsSync(filepath)) {
-    ctx.response.status(404).json({ error: "File not found" });
-    return;
-  }
-
-  ctx.response.setHeader("Content-Type", "application/octet-stream");
-  ctx.response.setHeader(
-    "Content-Disposition",
-    `attachment; filename="${filename}"`
-  );
-  ctx.response.body = fs.createReadStream(filepath);
-});
-
-app.use(router.getRoutes());
-
-app.listen(3000, () => {
-  console.log("File upload API running on http://localhost:3000");
 });
 ```
 
@@ -652,7 +528,7 @@ app.onError((err, ctx) => {
 
 app.listen(SERVICE_PORT, SERVICE_HOST, () => {
   console.log(
-    `${SERVICE_NAME} running on http://${SERVICE_HOST}:${SERVICE_PORT}`
+    `${SERVICE_NAME} running on http://${SERVICE_HOST}:${SERVICE_PORT}`,
   );
   console.log(`Health check: http://${SERVICE_HOST}:${SERVICE_PORT}/health`);
   console.log(`Discovery: http://${SERVICE_HOST}:${SERVICE_PORT}/discovery`);

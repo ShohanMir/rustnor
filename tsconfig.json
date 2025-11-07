@@ -1,23 +1,31 @@
 {
   "compilerOptions": {
-    "target": "es2017",
     "module": "commonjs",
-    "lib": ["es2017"],
+    "noImplicitAny": false,
+    "noUnusedLocals": false,
+    "target": "ES2021",
+    "removeComments": true,
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
     "outDir": "./dist",
-    "rootDir": "packages",
+    "rootDir": ".",
+    "noLib": false,
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "useUnknownInCatchVariables": false,
+    "allowJs": false,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
     "paths": {
-      "northernjs": ["packages/core"],
-      "northernjs/router": ["packages/router"]
+      "@northernjs": ["./packages/core"],
+      "@northernjs/router": ["./packages/router"]
     }
   },
-  "include": ["packages/**/*"],
+  "include": ["packages/**/*", "examples/**/*"],
   "exclude": ["node_modules", "dist", "test"]
 }

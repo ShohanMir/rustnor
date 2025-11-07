@@ -49,7 +49,7 @@ const result = await benchmark.run(
     // Your code here
     return myFunction();
   },
-  1000
+  1000,
 );
 
 console.log(`${result.name}: ${result.averageTime}ms average`);
@@ -65,7 +65,7 @@ const jsonResult = await benchmarkJson(
   "Fast JSON Parse",
   testData,
   (data) => JSON.parse(data),
-  1000
+  1000,
 );
 
 // Benchmark middleware
@@ -73,7 +73,7 @@ const middlewareResult = await benchmarkMiddleware(
   "My Middleware",
   myMiddleware,
   mockContext,
-  1000
+  1000,
 );
 ```
 
@@ -129,7 +129,7 @@ async function customBenchmark() {
       // Your performance-critical code
       return await myExpensiveOperation();
     },
-    10000
+    10000,
   );
 
   benchmark.printResults();

@@ -4,9 +4,8 @@ import {
   cors,
   logger,
   createFileRouter,
-  enableHotReload,
   Context,
-} from "northernjs";
+} from "../packages/core";
 
 async function createServer() {
   const app = new App();
@@ -44,7 +43,7 @@ if (require.main === module) {
     .then((app) => {
       const server = app.listen(8080, () => {
         console.log(
-          "🚀 File-Based Router NorthernJS Server running on port 8080"
+          "🚀 File-Based Router NorthernJS Server running on port 8080",
         );
         console.log("📁 Routes automatically loaded from /routes directory");
         console.log("");
@@ -57,14 +56,6 @@ if (require.main === module) {
         console.log("  DEL  /users/[id]");
         console.log("  GET  /api/health");
       });
-
-      // Enable hot reload in development
-      if (process.env.NODE_ENV !== "production") {
-        enableHotReload(server, {
-          watchPaths: ["examples/routes/**/*.ts"],
-          verbose: true,
-        });
-      }
     })
     .catch((err) => {
       console.error("Failed to start server:", err);

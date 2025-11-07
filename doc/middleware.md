@@ -39,23 +39,6 @@ router.post("/users", (ctx) => {
 - `strict` (boolean): Only parse `application/json` content type
 - `reviver` (function): JSON.parse reviver function
 
-### Body Parser (`bodyParser`)
-
-Advanced body parser supporting JSON, form data, and multipart uploads.
-
-```typescript
-import { App, bodyParser } from "northernjs";
-
-const app = new App();
-app.use(
-  bodyParser({
-    limit: 1024 * 100, // 100KB
-    multipart: true, // Enable file uploads
-    strict: false, // Allow non-JSON content types
-  })
-);
-```
-
 ### CORS (`cors`)
 
 Enable Cross-Origin Resource Sharing with flexible configuration.
@@ -70,7 +53,7 @@ app.use(
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
     maxAge: 86400,
-  })
+  }),
 );
 ```
 
@@ -96,7 +79,7 @@ app.use(
     level: "info", // error, warn, info
     format: "dev", // combined, common, dev, short, tiny, json
     skip: (ctx) => ctx.req.url?.includes("/health"),
-  })
+  }),
 );
 ```
 
@@ -122,7 +105,7 @@ app.use(
     threshold: 1024, // Minimum size to compress (bytes)
     level: 6, // Compression level (1-9)
     types: ["text/plain", "application/json", "text/html"],
-  })
+  }),
 );
 ```
 
@@ -151,7 +134,7 @@ app.use(
     secret: "your-secret-key",
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
     store: new MemoryStore(), // or RedisStore, etc.
-  })
+  }),
 );
 
 router.get("/visit", (ctx) => {
@@ -180,7 +163,7 @@ router.get("/visit", (ctx) => {
 >     await this.redis.setex(
 >       `session:${sid}`,
 >       maxAge / 1000,
->       JSON.stringify(session)
+>       JSON.stringify(session),
 >     );
 >   }
 >
@@ -217,7 +200,7 @@ app.use(
     //   // Implement proper authentication logic here
     //   return await verifyUser(username, password);
     // }
-  })
+  }),
 );
 
 router.get("/admin", (ctx) => {
@@ -239,7 +222,7 @@ app.use(
     max: 100, // 100 requests per window
     message: "Too many requests",
     statusCode: 429,
-  })
+  }),
 );
 ```
 
@@ -266,7 +249,7 @@ app.use(
       "default-src": ["'self'"],
       "script-src": ["'self'", "'unsafe-inline'"],
     },
-  })
+  }),
 );
 ```
 
@@ -293,7 +276,7 @@ app.use(
     redirectPort: 443,
     redirectStatus: 301, // or 302
     skip: (ctx) => process.env.NODE_ENV === "development",
-  })
+  }),
 );
 ```
 
@@ -310,7 +293,7 @@ app.use(
     sanitizeQuery: true,
     sanitizeBody: true,
     sanitizeHeaders: false,
-  })
+  }),
 );
 ```
 
@@ -327,7 +310,7 @@ app.use(
     log: true,
     html: (err, ctx) => `<h1>Error ${err.status}</h1><p>${err.message}</p>`,
     json: (err, ctx) => ({ error: err.message, status: err.status }),
-  })
+  }),
 );
 ```
 

@@ -1,5 +1,5 @@
 import { Context, Middleware } from "../framework/context";
-import querystring from "querystring";
+import * as querystring from "querystring";
 
 export interface JsonOptions {
   limit?: number; // bytes, default 100KB
@@ -25,7 +25,7 @@ export const json = (options: JsonOptions = {}): Middleware => {
 
       if (contentType.includes("application/json")) {
         try {
-          body = await parseJson(ctx.req, config.limit);
+          body = await parseJson(ctx, config.limit);
         } catch (err: any) {
           ctx.response.status(400).json({
             error: "Invalid JSON",
@@ -40,7 +40,7 @@ export const json = (options: JsonOptions = {}): Middleware => {
         contentType.includes("application/x-www-form-urlencoded")
       ) {
         try {
-          body = await parseForm(ctx.req, config.limit);
+          body = await parseForm(ctx, config.limit);
           // Flatten string[] to string for single values
           if (body) {
             Object.keys(body).forEach((key) => {
@@ -66,21 +66,21 @@ export const json = (options: JsonOptions = {}): Middleware => {
   };
 };
 
-async function parseJson(req: any, limit: number): Promise<any> {
+async function parseJson(ctx: Context, limit: number): Promise<any> {
   return new Promise((resolve, reject) => {
     let data = "";
     let size = 0;
 
-    req.on("data", (chunk: Buffer) => {
+    ctx.req.on("data", (chunk: Buffer) => {
       data += chunk;
       size += chunk.length;
       if (size > limit) {
-        req.destroy(new Error(`Request entity too large: ${size} > ${limit}`));
+        ctx.destroy(new Error(`Request entity too large: ${size} > ${limit}`));
         return;
       }
     });
 
-    req.on("end", () => {
+    ctx.req.on("end", () => {
       try {
         resolve(JSON.parse(data));
       } catch (err) {
@@ -88,28 +88,30 @@ async function parseJson(req: any, limit: number): Promise<any> {
       }
     });
 
-    req.on("error", reject);
+    ctx.req.on("error", reject);
   });
 }
 
 async function parseForm(
-  req: any,
-  limit: number
+  ctx: Context,
+  limit: number,
 ): Promise<Record<string, string | string[]>> {
   return new Promise((resolve, reject) => {
     let data = "";
     let size = 0;
 
-    req.on("data", (chunk: Buffer) => {
+    ctx.req.on("data", (chunk: Buffer) => {
       data += chunk;
       size += chunk.length;
       if (size > limit) {
-        req.destroy(new Error(`Request entity too large: ${size} > ${limit}`));
+        ctx.req.destroy(
+          new Error(`Request entity too large: ${size} > ${limit}`),
+        );
         return;
       }
     });
 
-    req.on("end", () => {
+    ctx.req.on("end", () => {
       try {
         resolve(querystring.parse(data) as Record<string, string | string[]>);
       } catch (err) {
@@ -117,6 +119,6 @@ async function parseForm(
       }
     });
 
-    req.on("error", reject);
+    ctx.req.on("error", reject);
   });
 }

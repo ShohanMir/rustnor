@@ -22,9 +22,6 @@
     "dev:example": "ts-node examples/simple-server.ts",
     "dev:advanced": "ts-node examples/advanced-server.ts",
     "dev:file-router": "ts-node examples/file-router-server.ts",
-    "dev:hot": "nodemon --exec ts-node examples/simple-server.ts",
-    "dev:hot-advanced": "nodemon --exec ts-node examples/advanced-server.ts",
-    "dev:hot-file-router": "nodemon --exec ts-node examples/file-router-server.ts",
     "benchmark": "ts-node benchmark/framework-comparison.ts",
     "prepublishOnly": "npm run build"
   },
@@ -57,12 +54,7 @@
       "types": "./dist/router/index.d.ts"
     }
   },
-  "dependencies": {
-    "busboy": "^1.6.0",
-    "chokidar": "^4.0.3"
-  },
   "devDependencies": {
-    "@types/busboy": "^1.5.4",
     "@types/chai": "^5.2.2",
     "@types/express": "^5.0.5",
     "@types/mocha": "^10.0.10",

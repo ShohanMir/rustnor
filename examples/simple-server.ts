@@ -1,5 +1,5 @@
-import { App, json, Context, staticMiddleware } from "northernjs";
-import { Router } from "northernjs/router";
+import { App, json, Context, staticMiddleware } from "../packages/core";
+import { Router } from "../packages/router";
 
 const app = new App();
 const router = new Router();
@@ -21,7 +21,7 @@ router.get("/", async (ctx) => {
   ctx.response
     .status(200)
     .send(
-      "Welcome! Try GET /user/123?lang=en, POST to /user with a JSON body, or GET /error to test error handling. Also try /index.html or /test.txt"
+      "Welcome! Try GET /user/123?lang=en, POST to /user with a JSON body, or GET /error to test error handling. Also try /index.html or /test.txt",
     );
 });
 

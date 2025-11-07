@@ -114,7 +114,7 @@ Function signature for middleware.
 ```typescript
 type Middleware<StateT = {}, BodyT = any> = (
   ctx: Context<StateT, BodyT>,
-  next: () => Promise<void>
+  next: () => Promise<void>,
 ) => Promise<void> | void;
 ```
 
@@ -133,25 +133,6 @@ interface JsonOptions {
   limit?: number; // Max body size in bytes (default: 100KB)
   strict?: boolean; // Only parse application/json (default: true)
   reviver?: (key: string, value: any) => any;
-}
-```
-
-### Body Parser
-
-```typescript
-function bodyParser(options?: BodyParserOptions): Middleware;
-```
-
-**Options:**
-
-```typescript
-interface BodyParserOptions {
-  limit?: number;
-  strict?: boolean;
-  multipart?: boolean;
-  customParsers?: {
-    multipart?: (ctx: Context, limit: number) => Promise<any>;
-  };
 }
 ```
 
@@ -269,7 +250,7 @@ interface BasicAuthOptions {
   skip?: (ctx: Context) => boolean;
   customAuth?: (
     username: string,
-    password: string
+    password: string,
   ) => Promise<boolean> | boolean;
 }
 ```
@@ -549,7 +530,7 @@ import {
   rateLimit,
   security,
   Router,
-} from "northernjs";
+} from "@northernjs";
 
 const app = new App();
 const router = new Router();
@@ -561,7 +542,7 @@ app.use(
     origin: process.env.ALLOWED_ORIGINS?.split(",") || [
       "http://localhost:3000",
     ],
-  })
+  }),
 );
 
 // Performance middleware
@@ -574,7 +555,7 @@ app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 100,
-  })
+  }),
 );
 
 // Session management
@@ -582,7 +563,7 @@ app.use(
   session({
     secret: process.env.SESSION_SECRET || "default-secret",
     maxAge: 24 * 60 * 60 * 1000,
-  })
+  }),
 );
 
 // Routes
